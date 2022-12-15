@@ -1,22 +1,31 @@
 package Model;
 
 public class Contact {
-    public void setContactID(){
+    private int contactID;
+    private String contactName;
+    private String email;
 
+    public Contact(int contactID, String contactName, String email){
+        this.contactID = contactID;
+        this.contactName = contactName;
+        this.email = email;
     }
-    public void getContactID(){
-
+    public void setContactID(int contactID){
+        this.contactID = contactID;
     }
-    public void setContactName(){
-
+    public int getContactID(){
+        return contactID;
     }
-    public void getContactName(){
-
+    public void setContactName(String contactName){
+        this.contactName = contactName;
     }
-    public void setContactEmail(){
-
+    public String getContactName(){
+        return contactName;
     }
-    public void getContactEmail(){
-
+    public void setContactEmail(String email){
+        this.email = email;
+    }
+    public String getContactEmail(){
+        return email;
     }
 }

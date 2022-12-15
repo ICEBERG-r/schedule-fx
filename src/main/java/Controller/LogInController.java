@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class MainController implements Initializable {
+public class LogInController implements Initializable {
 
 
     public PasswordField passwordLoginField;

@@ -1,46 +1,74 @@
 package Model;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 public class Appointment {
-    public void getAppointmentId(){
 
+    private int appointmentID;
+    private String title;
+    private String description;
+    private String location;
+    private String type;
+    private Date start;
+    private Date end;
+    private Date createDate;
+    private String createdBy;
+    private Timestamp lastUpdate;
+    private String lastUpdatedBy;
+    private int customerID;
+    private int userID;
+    private int contactID;
+
+    public Appointment(int appointmentID, String title, String description, String location, String type, Date start, Date end){
+        this.appointmentID = appointmentID;
+        this.title = title;
+        this.description = description;
+        this.location = location;
+        this.type = type;
+        this.start = start;
+        this.end = end;
     }
-    public void setAppointmentId(){
-
+    public int getAppointmentId(){
+        return appointmentID;
     }
-    public void getTitle(){
-
+    public void setAppointmentID(int appointmentID){
+        this.appointmentID = appointmentID;
     }
-    public void setTitle(){
-
+    public String getTitle(){
+        return title;
     }
-    public void setDescription(){
-
+    public void setTitle(String title){
+        this.title = title;
     }
-    public void getDescription(){
-
+    public void setDescription(String description){
+        this.description = description;
     }
-    public void getLocation(){
-
+    public String getDescription(){
+        return description;
     }
-    public void setLocation(){
-
+    public String getLocation(){
+        return location;
     }
-    public void getType(){
-
+    public void setLocation(String location){
+        this.location = location;
     }
-    public void setType(){
-
+    public String getType(){
+        return type;
     }
-    public void getStartTime(){
-
+    public void setType(String type){
+        this.type = type;
     }
-    public void setStartTime(){
-
+    public Date getStartTime(){
+        return start;
     }
-    public void getEndTime(){
-
+    public void setStartTime(Date start){
+        this.start = start;
     }
-    public void setEndTime(){
-
+    public Date getEndTime(){
+        return end;
+    }
+    public void setEndTime(Date end){
+        this.end = end;
     }
 }

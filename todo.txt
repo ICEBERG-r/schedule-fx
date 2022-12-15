@@ -1,0 +1,8 @@
+Create views
+    - Log-in -> Directory
+    Can largely copy layout and functionality from inventory-fx
+
+    Directory ~ Main Window
+        - two tables - Customers and Appointments
+        two buttons for each (Create and View/Edit)
+

@@ -1,34 +1,56 @@
 package Model;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 public class Customer {
-    public void setCustomerID(){
 
+    private int customerID;
+    private String customerName;
+    private String address;
+    private String postalCode;
+    private String phone;
+    private Date createDate;
+    private String createdBy;
+    private Timestamp lastUpdate;
+    private String lastUpdatedBy;
+    private int divisionID;
+
+    public Customer(int customerID, String customerName, String address, String postalCode, String phone){
+        this.customerID = customerID;
+        this.customerName = customerName;
+        this.address = address;
+        this.postalCode = postalCode;
+        this.phone = phone;
     }
-    public void getCustomerID(){
-
+    public void setCustomerID(int customerID){
+        this.customerID = customerID;
     }
-    public void setCustomerName(){
-
+    public int getCustomerID(){
+        return customerID;
     }
-    public void getCustomerName(){
-
+    public void setCustomerName(String customerName){
+        this.customerName = customerName;
     }
-    public void setAddress(){
-
+    public String getCustomerName(){
+        return customerName;
     }
-    public void getAddress(){
-
+    public void setAddress(String address){
+        this.address = address;
     }
-    public void setPostalCode(){
-
+    public String getAddress(){
+        return address;
     }
-    public void getPostalCode(){
-
+    public void setPostalCode(String postalCode){
+        this.postalCode = postalCode;
     }
-    public void setPhoneNumber(){
-
+    public String getPostalCode(){
+        return postalCode;
     }
-    public void getPhoneNumber(){
-
+    public void setPhoneNumber(String phone){
+        this.phone = phone;
+    }
+    public String getPhoneNumber(){
+        return phone;
     }
 }
