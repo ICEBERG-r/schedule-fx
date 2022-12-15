@@ -2,23 +2,22 @@ package Controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
-    public TextField userNameField;
-    public TextField passwordField;
-    public Button logInButton;
-    public Button exitButton;
 
+    public PasswordField passwordLoginField;
+    public TextField usernameLoginField;
+    public Button loginButton;
+    public Button exitButton;
+    public Label zoneIDLabel;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -35,7 +34,7 @@ public class MainController implements Initializable {
 
     }
 
-    public void OnLogInClicked(ActionEvent actionEvent) {
+    public void OnLoginButtonClicked(ActionEvent actionEvent) throws IOException {
         //if username and password combination is valid, move to next screen
         //else display incorrect login alert
     }
