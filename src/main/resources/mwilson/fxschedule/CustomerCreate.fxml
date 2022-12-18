@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mwilson.fxschedule.CustCreateController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mwilson.fxschedule.CustCreateController">
    <children>
-      <Label layoutX="259.0" layoutY="39.0" text="New Customer" />
+      <Label layoutX="259.0" layoutY="39.0" text="Customer" />
       <TextField layoutX="98.0" layoutY="76.0" />
       <TextField layoutX="98.0" layoutY="117.0" />
       <TextField layoutX="98.0" layoutY="156.0" />

@@ -1,8 +1,7 @@
 package mwilson.fxschedule.Model;
 
-
-//import java.sql.Date;
-//import java.sql.Timestamp;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Appointment {
     private int appointmentID;
@@ -10,8 +9,8 @@ public class Appointment {
     private String description;
     private String location;
     private String type;
-    //private Date start;
-    //private Date end;
+    private Date start;
+    private Date end;
     //private Date createDate;
     private String createdBy;
     //private Timestamp lastUpdate;
@@ -20,14 +19,14 @@ public class Appointment {
     private int userID;
     private int contactID;
 
-    public Appointment(int appointmentID, String title, String description, String location, String type /*Date start, Date end*/){
+    public Appointment(int appointmentID, String title, String description, String location, String type, Date start, Date end){
         this.appointmentID = appointmentID;
         this.title = title;
         this.description = description;
         this.location = location;
         this.type = type;
-        //this.start = start;
-        //this.end = end;
+        this.start = start;
+        this.end = end;
     }
     public int getAppointmentId(){
         return appointmentID;

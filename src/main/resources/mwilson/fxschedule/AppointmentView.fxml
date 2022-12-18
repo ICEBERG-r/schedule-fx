@@ -9,6 +9,24 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="mwilson.fxschedule.AppViewController"
-            prefHeight="400.0" prefWidth="600.0">
-
+            prefHeight="600.0" prefWidth="800.0">
+    <children>
+        <Label layoutX="259.0" layoutY="39.0" text="Appointment" />
+        <TextField layoutX="98.0" layoutY="76.0" />
+        <TextField layoutX="98.0" layoutY="117.0" />
+        <TextField layoutX="98.0" layoutY="156.0" />
+        <TextField layoutX="98.0" layoutY="200.0" />
+        <TextField layoutX="98.0" layoutY="242.0" />
+        <TextField layoutX="98.0" layoutY="285.0" />
+        <TextField layoutX="98.0" layoutY="325.0" />
+        <Label layoutX="65.0" layoutY="80.0" text="ID" />
+        <Label layoutX="49.0" layoutY="121.0" text="Title" />
+        <Label layoutX="42.0" layoutY="160.0" text="Description" />
+        <Label layoutX="26.0" layoutY="204.0" text="Location" />
+        <Label layoutX="53.0" layoutY="246.0" text="Type" />
+        <Label layoutX="44.0" layoutY="289.0" text="Start Time" />
+        <Label layoutX="43.0" layoutY="329.0" text="End Time" />
+        <Button fx:id="cancelButton" layoutX="531.0" layoutY="361.0" mnemonicParsing="false" onAction="#OnCancelButtonClicked" text="Cancel" />
+        <Button fx:id="saveButton" layoutX="204.0" layoutY="361.0" mnemonicParsing="false" onAction="#OnSaveButtonClicked" text="Save" />
+    </children>
 </AnchorPane>
