@@ -1,5 +1,6 @@
 package mwilson.fxschedule;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -7,6 +8,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import mwilson.fxschedule.DBAccess.DBCountries;
+import mwilson.fxschedule.Database.DBConnection;
+import mwilson.fxschedule.Model.Country;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,6 +26,7 @@ public class LogInController implements Initializable {
     public Button loginButton;
     public Button exitButton;
     public Label zoneIDLabel;
+    public Button dbTest;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -48,5 +53,13 @@ public class LogInController implements Initializable {
         stage.setTitle("Directory");
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void OnTestClicked(ActionEvent actionEvent) {
+
+        ObservableList<Country> countryList = DBCountries.getAllCountries();
+        for (Country C: countryList){
+            System.out.println("ID: " + C.getCountryID() + "  Name: " + C.getCountry());
+        }
     }
 }
