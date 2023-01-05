@@ -32,4 +32,35 @@ public class DBCustomers {
 
         return clist;
     }
+
+    public static int insert(String name, String address, String postalCode, String phone, int divisionID) throws SQLException {
+        String sql = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, Division_ID) VALUES(?, ?, ?, ?, ?)";
+        PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+        ps.setString(1, name);
+        ps.setString(2, address);
+        ps.setString(3, postalCode);
+        ps.setString(4, phone);
+        ps.setInt(5, divisionID);
+        return ps.executeUpdate();
+    }
+
+    public static int update(int customerID, String name, String address, String postalCode, String phone, int divisionID) throws SQLException {
+        String sql = "UPDATE customers SET Customer_Name = ? Address = ? Postal_Code = ? Phone = ? Division_ID = ? " +
+                "WHERE Customer_ID = ?";
+        PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+        ps.setString(1, name);
+        ps.setString(2, address);
+        ps.setString(3, postalCode);
+        ps.setString(4, phone);
+        ps.setInt(5, divisionID);
+        ps.setInt(6, customerID);
+        return ps.executeUpdate();
+    }
+
+    public static int delete(int customerID) throws SQLException {
+        String sql = "DELETE FROM customers WHERE Customer_ID = ?";
+        PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+        ps.setInt(1, customerID);
+        return ps.executeUpdate();
+    }
 }

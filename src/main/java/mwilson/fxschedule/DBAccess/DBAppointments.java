@@ -2,7 +2,6 @@ package mwilson.fxschedule.DBAccess;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.util.converter.DateTimeStringConverter;
 import mwilson.fxschedule.Database.DBConnection;
 import mwilson.fxschedule.Model.Appointment;
 
@@ -35,5 +34,43 @@ public class DBAppointments {
         }
 
         return alist;
+    }
+
+    public static int insert(String title, String description, String location, String type, Timestamp start, Timestamp end, int customerID, int userID, int contactID) throws SQLException {
+        String sql = "INSERT INTO appointments (Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) " +
+                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+        ps.setString(1,title);
+        ps.setString(2, description);
+        ps.setString(3, location);
+        ps.setString(4, type);
+        ps.setTimestamp(5, start);
+        ps.setTimestamp(6, end);
+        ps.setInt(7, customerID);
+        ps.setInt(8, userID);
+        ps.setInt(9, contactID);
+        return ps.executeUpdate();
+    }
+    public static int update(int appointmentID, String title, String description, String location, String type, Timestamp start, Timestamp end, int customerID, int userID, int contactID) throws SQLException {
+        String sql = "UPDATE appointments SET Title = ? Description = ? Location = ? Type = ? Start = ? End = ? " +
+                "Customer_ID = ? User_ID = ? Contact_ID = ? WHERE Appointment_ID = ?";
+        PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+        ps.setString(1,title);
+        ps.setString(2, description);
+        ps.setString(3, location);
+        ps.setString(4, type);
+        ps.setTimestamp(5, start);
+        ps.setTimestamp(6, end);
+        ps.setInt(7, customerID);
+        ps.setInt(8, userID);
+        ps.setInt(9, contactID);
+        ps.setInt(10, appointmentID);
+        return ps.executeUpdate();
+    }
+    public static int delete(int appointmentID) throws SQLException {
+        String sql = "DELETE FROM appointments WHERE Appointment_ID = ?";
+        PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+        ps.setInt(1, appointmentID);
+        return ps.executeUpdate();
     }
 }

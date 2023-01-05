@@ -1,8 +1,5 @@
 package mwilson.fxschedule.Model;
 
-//import java.sql.Date;
-//import java.sql.Timestamp;
-
 public class Customer {
 
     private int customerID;
@@ -10,10 +7,7 @@ public class Customer {
     private String address;
     private String postalCode;
     private String phone;
-    //private Date createDate;
-    private String createdBy;
-    //private Timestamp lastUpdate;
-    private String lastUpdatedBy;
+
     private int divisionID;
 
     public Customer(int customerID, String customerName, String address, String postalCode, String phone){

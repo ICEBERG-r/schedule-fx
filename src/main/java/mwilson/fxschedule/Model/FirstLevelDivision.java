@@ -1,15 +1,8 @@
 package mwilson.fxschedule.Model;
 
-//import java.sql.Date;
-//import java.sql.Timestamp;
-
 public class FirstLevelDivision {
     private int divisionID;
     private String division;
-    //private Date createDate;
-    private String createdBy;
-    //private Timestamp lastUpdate;
-    private String lastUpdatedBy;
     private int countryID;
 
     public FirstLevelDivision(int divisionID, String division){
