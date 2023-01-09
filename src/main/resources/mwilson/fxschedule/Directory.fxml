@@ -2,21 +2,42 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mwilson.fxschedule.DirectoryController">
    <children>
-      <Label layoutX="78.0" layoutY="41.0" text="Customers" />
-      <Label layoutX="404.0" layoutY="41.0" text="Appointments" />
-      <ListView layoutX="31.0" layoutY="70.0" prefHeight="200.0" prefWidth="265.0" />
-      <ListView layoutX="343.0" layoutY="70.0" prefHeight="200.0" prefWidth="294.0" />
-      <Button fx:id="newCustomerButton" layoutX="31.0" layoutY="281.0" mnemonicParsing="false" onAction="#OnNewCustomerButtonClicked" text="New" />
-      <Button fx:id="viewCustomerButton" layoutX="86.0" layoutY="281.0" mnemonicParsing="false" onAction="#OnViewCustomerButtonClicked" text="View / Edit" />
-      <Button fx:id="newAppointmentButton" layoutX="343.0" layoutY="281.0" mnemonicParsing="false" onAction="#OnNewAppointmentButtonClicked" text="New" />
-      <Button fx:id="viewAppointmentButton" layoutX="398.0" layoutY="281.0" mnemonicParsing="false" onAction="#OnViewAppointmentButtonClicked" text="View / Edit" />
-      <Button fx:id="exitButton" layoutX="531.0" layoutY="361.0" mnemonicParsing="false" onAction="#OnExitButtonClicked" text="Exit" />
-      <Button fx:id="deleteCustomerButton" layoutX="173.0" layoutY="281.0" mnemonicParsing="false" onAction="#OnDeleteCustomerButtonClicked" text="Delete" />
-      <Button fx:id="deleteAppointmentButton" layoutX="481.0" layoutY="282.0" mnemonicParsing="false" onAction="#OnDeleteAppointmentButtonClicked" text="Delete" />
+      <Label layoutX="31.0" layoutY="23.0" text="Customers" />
+      <Label layoutX="31.0" layoutY="299.0" text="Appointments" />
+      <Button fx:id="newCustomerButton" layoutX="31.0" layoutY="256.0" mnemonicParsing="false" onAction="#OnNewCustomerButtonClicked" text="New" />
+      <Button fx:id="viewCustomerButton" layoutX="81.0" layoutY="256.0" mnemonicParsing="false" onAction="#OnViewCustomerButtonClicked" text="View / Edit" />
+      <Button fx:id="newAppointmentButton" layoutX="31.0" layoutY="526.0" mnemonicParsing="false" onAction="#OnNewAppointmentButtonClicked" text="New" />
+      <Button fx:id="viewAppointmentButton" layoutX="81.0" layoutY="526.0" mnemonicParsing="false" onAction="#OnViewAppointmentButtonClicked" text="View / Edit" />
+      <Button fx:id="exitButton" layoutX="749.0" layoutY="552.0" mnemonicParsing="false" onAction="#OnExitButtonClicked" text="Exit" />
+      <Button fx:id="deleteCustomerButton" layoutX="161.0" layoutY="256.0" mnemonicParsing="false" onAction="#OnDeleteCustomerButtonClicked" text="Delete" />
+      <Button fx:id="deleteAppointmentButton" layoutX="161.0" layoutY="526.0" mnemonicParsing="false" onAction="#OnDeleteAppointmentButtonClicked" text="Delete" />
+      <Button fx:id="reportsButton" layoutX="477.0" layoutY="552.0" mnemonicParsing="false" onAction="#OnReportsClicked" text="Reports" />
+      <TableView layoutX="31.0" layoutY="40.0" prefHeight="210.0" prefWidth="566.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="C1" />
+          <TableColumn prefWidth="75.0" text="C2" />
+        </columns>
+      </TableView>
+      <TableView layoutX="31.0" layoutY="316.0" prefHeight="203.0" prefWidth="566.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="C1" />
+          <TableColumn prefWidth="75.0" text="C2" />
+        </columns>
+      </TableView>
+      <RadioButton fx:id="allAppointmentsRadio" layoutX="214.0" layoutY="291.0" mnemonicParsing="false" onAction="#onAllAppointmentsSelected" selected="true" text="All">
+         <toggleGroup>
+            <ToggleGroup fx:id="appointments" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="thisWeekRadio" layoutX="259.0" layoutY="291.0" mnemonicParsing="false" onAction="#OnThisWeekSelected" text="This Week" toggleGroup="$appointments" />
+      <RadioButton fx:id="thisMonthRadio" layoutX="348.0" layoutY="291.0" mnemonicParsing="false" onAction="#OnThisMonthSelected" text="This Month" toggleGroup="$appointments" />
    </children>
 </AnchorPane>
