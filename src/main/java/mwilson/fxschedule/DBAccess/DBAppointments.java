@@ -24,8 +24,8 @@ public class DBAppointments {
                 String description = rs.getString("Description");
                 String location = rs.getString("Location");
                 String type = rs.getString("Type");
-                Date start = rs.getDate("Start");
-                Date end = rs.getDate("End");
+                Timestamp start = rs.getTimestamp("Start");
+                Timestamp end = rs.getTimestamp("End");
                 Appointment A = new Appointment(appointmentID, title, description, location, type, start, end);
                 alist.add(A);
             }

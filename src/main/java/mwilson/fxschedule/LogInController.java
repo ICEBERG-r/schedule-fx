@@ -33,6 +33,8 @@ public class LogInController implements Initializable {
     }
 
     public void OnExitClicked(ActionEvent actionEvent) {
+
+        //check for language using a switch statement. only EN or FR for this assignment
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit");
         alert.setHeaderText("Are you sure you want to exit?");
@@ -45,7 +47,7 @@ public class LogInController implements Initializable {
 
     public void OnLoginButtonClicked(ActionEvent actionEvent) throws IOException {
         //if username and password combination is valid, move to next screen
-        //else display incorrect login alert
+        //else check for language and display incorrect login alert for that language
         //Temporarily moves to directory view without valid login/pw
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
         Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();

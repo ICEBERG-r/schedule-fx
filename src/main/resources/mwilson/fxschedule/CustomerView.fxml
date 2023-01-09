@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="mwilson.fxschedule.CustViewController"
-            prefHeight="600.0" prefWidth="800.0">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mwilson.fxschedule.CustViewController">
     <children>
-        <Label layoutX="259.0" layoutY="39.0" text="New Customer" />
-        <TextField layoutX="98.0" layoutY="76.0" />
-        <TextField layoutX="98.0" layoutY="117.0" />
-        <TextField layoutX="98.0" layoutY="156.0" />
-        <TextField layoutX="98.0" layoutY="200.0" />
-        <TextField layoutX="98.0" layoutY="242.0" />
-        <TextField layoutX="98.0" layoutY="285.0" />
-        <TextField layoutX="98.0" layoutY="325.0" />
+        <Label layoutX="259.0" layoutY="39.0" text="View/Edit Customer" />
+        <TextField fx:id="idField" disable="true" layoutX="98.0" layoutY="76.0" />
+        <TextField fx:id="nameField" layoutX="98.0" layoutY="117.0" />
+        <TextField fx:id="addressField" layoutX="98.0" layoutY="156.0" />
+        <TextField fx:id="postalField" layoutX="98.0" layoutY="200.0" />
+        <TextField fx:id="phoneField" layoutX="98.0" layoutY="242.0" />
         <Label layoutX="65.0" layoutY="80.0" text="ID" />
         <Label layoutX="49.0" layoutY="121.0" text="Name" />
         <Label layoutX="42.0" layoutY="160.0" text="Address" />
         <Label layoutX="26.0" layoutY="204.0" text="Postal Code" />
         <Label layoutX="53.0" layoutY="246.0" text="Phone" />
-        <Label layoutX="44.0" layoutY="289.0" text="Division" />
-        <Label layoutX="43.0" layoutY="329.0" text="Country" />
+        <Label layoutX="314.0" layoutY="206.0" text="Division" />
+        <Label layoutX="314.0" layoutY="160.0" text="Country" />
         <Button fx:id="cancelButton" layoutX="531.0" layoutY="361.0" mnemonicParsing="false" onAction="#OnCancelButtonClicked" text="Cancel" />
         <Button fx:id="saveButton" layoutX="204.0" layoutY="361.0" mnemonicParsing="false" onAction="#OnSaveButtonClicked" text="Save" />
+      <ComboBox fx:id="countryCombo" layoutX="367.0" layoutY="157.0" prefWidth="150.0" />
+      <ComboBox fx:id="divisionCombo" layoutX="367.0" layoutY="201.0" prefWidth="150.0" />
     </children>
 </AnchorPane>

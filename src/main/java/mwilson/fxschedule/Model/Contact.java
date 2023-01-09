@@ -10,20 +10,12 @@ public class Contact {
         this.contactName = contactName;
         this.email = email;
     }
-    public void setContactID(int contactID){
-        this.contactID = contactID;
-    }
+
     public int getContactID(){
         return contactID;
     }
-    public void setContactName(String contactName){
-        this.contactName = contactName;
-    }
     public String getContactName(){
         return contactName;
-    }
-    public void setContactEmail(String email){
-        this.email = email;
     }
     public String getContactEmail(){
         return email;

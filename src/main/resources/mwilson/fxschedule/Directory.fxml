@@ -9,12 +9,14 @@
    <children>
       <Label layoutX="78.0" layoutY="41.0" text="Customers" />
       <Label layoutX="404.0" layoutY="41.0" text="Appointments" />
-      <ListView layoutX="31.0" layoutY="70.0" prefHeight="200.0" prefWidth="200.0" />
-      <ListView layoutX="343.0" layoutY="70.0" prefHeight="200.0" prefWidth="200.0" />
+      <ListView layoutX="31.0" layoutY="70.0" prefHeight="200.0" prefWidth="265.0" />
+      <ListView layoutX="343.0" layoutY="70.0" prefHeight="200.0" prefWidth="294.0" />
       <Button fx:id="newCustomerButton" layoutX="31.0" layoutY="281.0" mnemonicParsing="false" onAction="#OnNewCustomerButtonClicked" text="New" />
-      <Button fx:id="viewCustomerButton" layoutX="86.0" layoutY="281.0" mnemonicParsing="false" onAction="#OnViewCustomerButtonClicked" text="View" />
+      <Button fx:id="viewCustomerButton" layoutX="86.0" layoutY="281.0" mnemonicParsing="false" onAction="#OnViewCustomerButtonClicked" text="View / Edit" />
       <Button fx:id="newAppointmentButton" layoutX="343.0" layoutY="281.0" mnemonicParsing="false" onAction="#OnNewAppointmentButtonClicked" text="New" />
-      <Button fx:id="viewAppointmentButton" layoutX="398.0" layoutY="281.0" mnemonicParsing="false" onAction="#OnViewAppointmentButtonClicked" text="View" />
+      <Button fx:id="viewAppointmentButton" layoutX="398.0" layoutY="281.0" mnemonicParsing="false" onAction="#OnViewAppointmentButtonClicked" text="View / Edit" />
       <Button fx:id="exitButton" layoutX="531.0" layoutY="361.0" mnemonicParsing="false" onAction="#OnExitButtonClicked" text="Exit" />
+      <Button fx:id="deleteCustomerButton" layoutX="173.0" layoutY="281.0" mnemonicParsing="false" onAction="#OnDeleteCustomerButtonClicked" text="Delete" />
+      <Button fx:id="deleteAppointmentButton" layoutX="481.0" layoutY="282.0" mnemonicParsing="false" onAction="#OnDeleteAppointmentButtonClicked" text="Delete" />
    </children>
 </AnchorPane>

@@ -58,9 +58,10 @@ public class DBCustomers {
     }
 
     public static int delete(int customerID) throws SQLException {
-        String sql = "DELETE FROM customers WHERE Customer_ID = ?";
+        String sql = "DELETE FROM appointments WHERE Customer_ID = ?; DELETE FROM customers WHERE Customer_ID = ?";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
         ps.setInt(1, customerID);
+        ps.setInt(2, customerID);
         return ps.executeUpdate();
     }
 }
