@@ -1,6 +1,6 @@
 package mwilson.fxschedule.Model;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class Appointment {
     private int appointmentID;
@@ -8,10 +8,10 @@ public class Appointment {
     private String description;
     private String location;
     private String type;
-    private Timestamp start;
-    private Timestamp end;
+    private LocalDateTime start;
+    private LocalDateTime end;
 
-    public Appointment(int appointmentID, String title, String description, String location, String type, Timestamp start, Timestamp end){
+    public Appointment(int appointmentID, String title, String description, String location, String type, LocalDateTime start, LocalDateTime end){
         this.appointmentID = appointmentID;
         this.title = title;
         this.description = description;
@@ -35,10 +35,10 @@ public class Appointment {
     public String getType(){
         return type;
     }
-    public Timestamp getStartTime(){
+    public LocalDateTime getStartTime(){
         return start;
     }
-    public Timestamp getEndTime(){
+    public LocalDateTime getEndTime(){
         return end;
     }
 }

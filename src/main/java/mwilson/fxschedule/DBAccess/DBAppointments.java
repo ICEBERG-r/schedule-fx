@@ -6,6 +6,7 @@ import mwilson.fxschedule.Database.DBConnection;
 import mwilson.fxschedule.Model.Appointment;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 
 public class DBAppointments {
     public static ObservableList<Appointment> getAllAppointments(){
@@ -26,7 +27,7 @@ public class DBAppointments {
                 String type = rs.getString("Type");
                 Timestamp start = rs.getTimestamp("Start");
                 Timestamp end = rs.getTimestamp("End");
-                Appointment A = new Appointment(appointmentID, title, description, location, type, start, end);
+                Appointment A = new Appointment(appointmentID, title, description, location, type, start.toLocalDateTime(), end.toLocalDateTime());
                 alist.add(A);
             }
         } catch (SQLException throwables){
@@ -36,7 +37,7 @@ public class DBAppointments {
         return alist;
     }
 
-    public static int insert(String title, String description, String location, String type, Timestamp start, Timestamp end, int customerID, int userID, int contactID) throws SQLException {
+    public static int insert(String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, int customerID, int userID, int contactID) throws SQLException {
         String sql = "INSERT INTO appointments (Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) " +
                 "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
@@ -44,14 +45,14 @@ public class DBAppointments {
         ps.setString(2, description);
         ps.setString(3, location);
         ps.setString(4, type);
-        ps.setTimestamp(5, start);
-        ps.setTimestamp(6, end);
+        ps.setTimestamp(5, Timestamp.valueOf(start));
+        ps.setTimestamp(6, Timestamp.valueOf(end));
         ps.setInt(7, customerID);
         ps.setInt(8, userID);
         ps.setInt(9, contactID);
         return ps.executeUpdate();
     }
-    public static int update(int appointmentID, String title, String description, String location, String type, Timestamp start, Timestamp end, int customerID, int userID, int contactID) throws SQLException {
+    public static int update(int appointmentID, String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, int customerID, int userID, int contactID) throws SQLException {
         String sql = "UPDATE appointments SET Title = ? Description = ? Location = ? Type = ? Start = ? End = ? " +
                 "Customer_ID = ? User_ID = ? Contact_ID = ? WHERE Appointment_ID = ?";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
@@ -59,8 +60,8 @@ public class DBAppointments {
         ps.setString(2, description);
         ps.setString(3, location);
         ps.setString(4, type);
-        ps.setTimestamp(5, start);
-        ps.setTimestamp(6, end);
+        ps.setTimestamp(5, Timestamp.valueOf(start));
+        ps.setTimestamp(6, Timestamp.valueOf(end));
         ps.setInt(7, customerID);
         ps.setInt(8, userID);
         ps.setInt(9, contactID);
