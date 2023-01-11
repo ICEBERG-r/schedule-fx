@@ -11,9 +11,12 @@ import javafx.stage.Stage;
 import mwilson.fxschedule.DBAccess.DBCountries;
 import mwilson.fxschedule.Database.DBConnection;
 import mwilson.fxschedule.Model.Country;
+import mwilson.fxschedule.Utilities.Helper;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -35,33 +38,59 @@ public class LogInController implements Initializable {
     public void OnExitClicked(ActionEvent actionEvent) {
 
         //check for language using a switch statement. only EN or FR for this assignment
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Exit");
-        alert.setHeaderText("Are you sure you want to exit?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get().equals(ButtonType.OK)){
-            System.exit(0);
-        }
+        Helper.ExitProgramPrompt();
 
     }
 
     public void OnLoginButtonClicked(ActionEvent actionEvent) throws IOException {
-        //if username and password combination is valid, move to next screen
-        //else check for language and display incorrect login alert for that language
-        //Temporarily moves to directory view without valid login/pw
+
+        //log in not working
+        //probably need another method of reading the pw from DB
+        //Password is "text" in the DB, and not varchar as expected?
+        //can the "text" not be converted to a string?
+        try {
+        String uname = usernameLoginField.getText();
+        String pw = passwordLoginField.getText();
+
+        String sql = "SELECT Password FROM Users WHERE User_Name = ?";
+        PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+        ps.setString(1, uname);
+        ResultSet rs = ps.executeQuery();
+
+
+        String actualPw = (String) rs.getObject("Password");
+            System.out.println(uname);
+            System.out.println(pw);
+            System.out.println(actualPw);
+        if (pw.equals(actualPw)) {
+                Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
+                Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+                Scene scene = new Scene(root);
+                stage.setTitle("Directory");
+                stage.setScene(scene);
+                stage.show();
+            }
+            else {
+                Helper.DisplayInfoAlert("Log-in Error", "Username and Password combination is incorrect");
+        }
+        } catch (Exception e){
+            Helper.DisplayInfoAlert("Log-in Error", "Username and Password combination is incorrect");
+        }
+
+
+
+
+
+    }
+
+    public void OnTestClicked(ActionEvent actionEvent) throws IOException {
+
+        //Bypasses the login
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
-        Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setTitle("Directory");
         stage.setScene(scene);
         stage.show();
-    }
-
-    public void OnTestClicked(ActionEvent actionEvent) {
-
-        ObservableList<Country> countryList = DBCountries.getAllCountries();
-        for (Country C: countryList){
-            System.out.println("ID: " + C.getCountryID() + "  Name: " + C.getCountry());
-        }
     }
 }

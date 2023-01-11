@@ -5,10 +5,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import mwilson.fxschedule.DBAccess.DBCustomers;
+import mwilson.fxschedule.Model.Appointment;
+import mwilson.fxschedule.Model.Customer;
+import mwilson.fxschedule.Utilities.Helper;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,9 +24,20 @@ public class DirectoryController implements Initializable {
     public Button newAppointmentButton;
     public Button viewAppointmentButton;
     public Button exitButton;
+    public Button deleteCustomerButton;
+    public Button deleteAppointmentButton;
+    public Button reportsButton;
+    public TableView<Customer> customerTable;
+    public TableView<Appointment> appointmentTable;
+    public RadioButton allAppointmentsRadio;
+    public ToggleGroup appointments;
+    public RadioButton thisWeekRadio;
+    public RadioButton thisMonthRadio;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
 
+
+        customerTable.setItems(DBCustomers.getAllCustomers());
     }
 
     public void OnNewCustomerButtonClicked(ActionEvent actionEvent) throws IOException {
@@ -71,5 +84,23 @@ public class DirectoryController implements Initializable {
         if (result.get().equals(ButtonType.OK)){
             System.exit(0);
         }
+    }
+
+    public void OnDeleteCustomerButtonClicked(ActionEvent actionEvent) {
+    }
+
+    public void OnDeleteAppointmentButtonClicked(ActionEvent actionEvent) {
+    }
+
+    public void OnReportsClicked(ActionEvent actionEvent) {
+    }
+
+    public void onAllAppointmentsSelected(ActionEvent actionEvent) {
+    }
+
+    public void OnThisWeekSelected(ActionEvent actionEvent) {
+    }
+
+    public void OnThisMonthSelected(ActionEvent actionEvent) {
     }
 }

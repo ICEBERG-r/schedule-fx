@@ -20,13 +20,13 @@
       <Button fx:id="deleteCustomerButton" layoutX="161.0" layoutY="256.0" mnemonicParsing="false" onAction="#OnDeleteCustomerButtonClicked" text="Delete" />
       <Button fx:id="deleteAppointmentButton" layoutX="161.0" layoutY="526.0" mnemonicParsing="false" onAction="#OnDeleteAppointmentButtonClicked" text="Delete" />
       <Button fx:id="reportsButton" layoutX="477.0" layoutY="552.0" mnemonicParsing="false" onAction="#OnReportsClicked" text="Reports" />
-      <TableView layoutX="31.0" layoutY="40.0" prefHeight="210.0" prefWidth="566.0">
+      <TableView fx:id="customerTable" layoutX="31.0" layoutY="40.0" prefHeight="210.0" prefWidth="566.0">
         <columns>
           <TableColumn prefWidth="75.0" text="C1" />
           <TableColumn prefWidth="75.0" text="C2" />
         </columns>
       </TableView>
-      <TableView layoutX="31.0" layoutY="316.0" prefHeight="203.0" prefWidth="566.0">
+      <TableView fx:id="appointmentTable" layoutX="31.0" layoutY="316.0" prefHeight="203.0" prefWidth="566.0">
         <columns>
           <TableColumn prefWidth="75.0" text="C1" />
           <TableColumn prefWidth="75.0" text="C2" />
@@ -38,6 +38,6 @@
          </toggleGroup>
       </RadioButton>
       <RadioButton fx:id="thisWeekRadio" layoutX="259.0" layoutY="291.0" mnemonicParsing="false" onAction="#OnThisWeekSelected" text="This Week" toggleGroup="$appointments" />
-      <RadioButton fx:id="thisMonthRadio" layoutX="348.0" layoutY="291.0" mnemonicParsing="false" onAction="#OnThisMonthSelected" text="This Month" toggleGroup="$appointments" />
+      <RadioButton fx:id="thisMonthRadio" layoutX="348.0" layoutY="290.0" mnemonicParsing="false" onAction="#OnThisMonthSelected" text="This Month" toggleGroup="$appointments" />
    </children>
 </AnchorPane>
