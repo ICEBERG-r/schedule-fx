@@ -7,11 +7,13 @@ import javafx.collections.ObservableList;
 
 import java.sql.*;
 public class DBUsers {
+
+    public static String tableName = "users";
     public static ObservableList<User> getAllUsers(){
         ObservableList<User> ulist = FXCollections.observableArrayList();
 
         try {
-            String sql = "SELECT * from Users";
+            String sql = "SELECT * from users";
 
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
 

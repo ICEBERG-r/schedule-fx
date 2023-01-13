@@ -6,14 +6,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import mwilson.fxschedule.DBAccess.DBAppointments;
 import mwilson.fxschedule.DBAccess.DBCustomers;
 import mwilson.fxschedule.Model.Appointment;
 import mwilson.fxschedule.Model.Customer;
+import mwilson.fxschedule.Utilities.DynamicTable;
 import mwilson.fxschedule.Utilities.Helper;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -34,10 +38,31 @@ public class DirectoryController implements Initializable {
     public RadioButton thisWeekRadio;
     public RadioButton thisMonthRadio;
 
+    public TableColumn<Object, Object> appointmentIdColumn;
+    public TableColumn<Object, Object> appointmentTitleColumn;
+    public TableColumn<Object, Object> appointmentDescriptionColumn;
+    public TableColumn<Object, Object> appointmentLocationColumn;
+    public TableColumn<Object, Object> appointmentContactColumn;
+    public TableColumn<Object, Object> appointmentTypeColumn;
+    public TableColumn<Object, Object> appointmentStartColumn;
+    public TableColumn<Object, Object> appointmentEndColumn;
+    public TableColumn<Object, Object> appointmentCustomerIdColumn;
+    public TableColumn<Object, Object> appointmentUserIdColumn;
+
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
 
 
-        customerTable.setItems(DBCustomers.getAllCustomers());
+        try {
+            customerTable.setItems(DynamicTable.buildData(DBCustomers.tableName, customerTable));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            appointmentTable.setItems(DynamicTable.buildData(DBAppointments.tableName, appointmentTable));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public void OnNewCustomerButtonClicked(ActionEvent actionEvent) throws IOException {

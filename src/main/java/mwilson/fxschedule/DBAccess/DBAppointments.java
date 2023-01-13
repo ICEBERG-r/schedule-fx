@@ -9,11 +9,13 @@ import java.sql.*;
 import java.time.LocalDateTime;
 
 public class DBAppointments {
+
+    public static String tableName = "appointments";
     public static ObservableList<Appointment> getAllAppointments(){
         ObservableList<Appointment> alist = FXCollections.observableArrayList();
 
         try {
-            String sql = "SELECT * from Appointments";
+            String sql = "SELECT * from appointments";
 
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
 

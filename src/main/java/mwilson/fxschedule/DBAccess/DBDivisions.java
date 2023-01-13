@@ -7,11 +7,13 @@ import javafx.collections.ObservableList;
 
 import java.sql.*;
 public class DBDivisions {
+
+    public static String tableName = "first_level_divisions";
     public static ObservableList<FirstLevelDivision> getAllDivisions(){
         ObservableList<FirstLevelDivision> dlist = FXCollections.observableArrayList();
 
         try {
-            String sql = "SELECT * from FIRST-LEVEL DIVISIONS";
+            String sql = "SELECT * from first_level_divisions";
 
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
 

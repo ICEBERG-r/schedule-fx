@@ -8,9 +8,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import mwilson.fxschedule.DBAccess.DBCountries;
+import mwilson.fxschedule.DBAccess.*;
 import mwilson.fxschedule.Database.DBConnection;
 import mwilson.fxschedule.Model.Country;
+import mwilson.fxschedule.Model.Customer;
 import mwilson.fxschedule.Utilities.Helper;
 
 import java.io.IOException;
@@ -32,7 +33,10 @@ public class LogInController implements Initializable {
     public Button dbTest;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        ObservableList<Customer> customerList = DBCustomers.getAllCustomers();
+        for (Customer C: customerList){
+            System.out.println("ID: " + C.getCustomerID() + " Name: " + C.getCustomerName());
+        }
     }
 
     public void OnExitClicked(ActionEvent actionEvent) {

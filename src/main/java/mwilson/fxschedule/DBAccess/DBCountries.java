@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import java.sql.*;
 public class DBCountries {
 
+    public static String tableName = "countries";
     public static ObservableList<Country> getAllCountries(){
         ObservableList<Country> clist = FXCollections.observableArrayList();
 

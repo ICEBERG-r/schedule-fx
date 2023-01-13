@@ -7,6 +7,8 @@ import javafx.collections.ObservableList;
 
 import java.sql.*;
 public class DBCustomers {
+
+    public static String tableName = "customers";
     public static ObservableList<Customer> getAllCustomers(){
         ObservableList<Customer> clist = FXCollections.observableArrayList();
 

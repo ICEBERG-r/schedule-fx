@@ -11,11 +11,13 @@ import java.sql.SQLException;
 import java.util.PropertyPermission;
 
 public class DBContacts {
+
+    public static String tableName = "contacts";
     public static ObservableList<Contact> getAllContacts(){
         ObservableList<Contact> clist = FXCollections.observableArrayList();
 
         try {
-            String sql = "SELECT * from Contacts";
+            String sql = "SELECT * from contacts";
 
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
 
