@@ -33,10 +33,7 @@ public class LogInController implements Initializable {
     public Button dbTest;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
-        ObservableList<Customer> customerList = DBCustomers.getAllCustomers();
-        for (Customer C: customerList){
-            System.out.println("ID: " + C.getCustomerID() + " Name: " + C.getCustomerName());
-        }
+
     }
 
     public void OnExitClicked(ActionEvent actionEvent) {

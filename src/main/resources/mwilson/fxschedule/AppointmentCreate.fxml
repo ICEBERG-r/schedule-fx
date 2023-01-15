@@ -8,7 +8,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mwilson.fxschedule.AppViewController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mwilson.fxschedule.AppCreateController">
     <children>
         <Label layoutX="259.0" layoutY="39.0" text="New Appointment" />
         <TextField fx:id="idField" disable="true" layoutX="98.0" layoutY="76.0" />

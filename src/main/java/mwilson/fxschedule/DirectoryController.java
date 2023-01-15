@@ -1,22 +1,24 @@
 package mwilson.fxschedule;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import mwilson.fxschedule.DBAccess.DBAppointments;
-import mwilson.fxschedule.DBAccess.DBCustomers;
-import mwilson.fxschedule.Model.Appointment;
+import javafx.util.Callback;
+import mwilson.fxschedule.Database.DBConnection;
 import mwilson.fxschedule.Model.Customer;
-import mwilson.fxschedule.Utilities.DynamicTable;
-import mwilson.fxschedule.Utilities.Helper;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,34 +33,47 @@ public class DirectoryController implements Initializable {
     public Button deleteCustomerButton;
     public Button deleteAppointmentButton;
     public Button reportsButton;
-    public TableView<Customer> customerTable;
-    public TableView<Appointment> appointmentTable;
+    public TableView<ObservableList> customerTable;
+    public TableView<ObservableList> appointmentTable;
     public RadioButton allAppointmentsRadio;
     public ToggleGroup appointments;
     public RadioButton thisWeekRadio;
     public RadioButton thisMonthRadio;
 
-    public TableColumn<Object, Object> appointmentIdColumn;
-    public TableColumn<Object, Object> appointmentTitleColumn;
-    public TableColumn<Object, Object> appointmentDescriptionColumn;
-    public TableColumn<Object, Object> appointmentLocationColumn;
-    public TableColumn<Object, Object> appointmentContactColumn;
-    public TableColumn<Object, Object> appointmentTypeColumn;
-    public TableColumn<Object, Object> appointmentStartColumn;
-    public TableColumn<Object, Object> appointmentEndColumn;
-    public TableColumn<Object, Object> appointmentCustomerIdColumn;
-    public TableColumn<Object, Object> appointmentUserIdColumn;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
+        Connection c;
+        ObservableList<ObservableList> customerData = FXCollections.observableArrayList();
+        ObservableList<ObservableList> appointmentData = FXCollections.observableArrayList();
 
 
         try {
-            customerTable.setItems(DynamicTable.buildData(DBCustomers.tableName, customerTable));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            appointmentTable.setItems(DynamicTable.buildData(DBAppointments.tableName, appointmentTable));
+            c = DBConnection.getConnection();
+            String SQL = "SELECT * FROM customers";
+
+            ResultSet rs = c.createStatement().executeQuery(SQL);
+
+            for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
+                final int j = i;
+                TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1));
+                col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
+                    public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
+                        return new SimpleStringProperty(param.getValue().get(j).toString());
+                    }
+                });
+
+                customerTable.getColumns().addAll(col);
+            }
+
+            while (rs.next()) {
+                ObservableList<String> row = FXCollections.observableArrayList();
+                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                    row.add(rs.getString(i));
+                }
+                customerData.add(row);
+            }
+
+            customerTable.setItems(customerData);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -75,6 +90,7 @@ public class DirectoryController implements Initializable {
     }
 
     public void OnViewCustomerButtonClicked(ActionEvent actionEvent) throws IOException {
+        CustViewController.selectedCustomer = (Customer) customerTable.getSelectionModel().getSelectedItem();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("CustomerView.fxml")));
         Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
@@ -93,6 +109,8 @@ public class DirectoryController implements Initializable {
     }
 
     public void OnViewAppointmentButtonClicked(ActionEvent actionEvent) throws IOException {
+        System.out.println(appointmentTable.getSelectionModel().getSelectedItem().toString());
+        //AppViewController.selectedAppointment = appointmentTable.getSelectionModel().getSelectedItem();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("AppointmentView.fxml")));
         Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);

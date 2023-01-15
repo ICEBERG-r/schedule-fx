@@ -4,10 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import mwilson.fxschedule.Model.Contact;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -16,6 +15,14 @@ import java.util.Optional;
 public class AppCreateController {
     public Button cancelButton;
     public Button saveButton;
+    public TextField idField;
+    public TextField titleField;
+    public TextField locationField;
+    public TextField typeField;
+    public DatePicker startDateBox;
+    public DatePicker endDateBox;
+    public TextArea descriptionArea;
+    public ComboBox<Contact> contactBox;
 
     public void OnCancelButtonClicked(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

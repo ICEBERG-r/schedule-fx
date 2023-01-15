@@ -7,4 +7,5 @@ module mwilson.fxschedule {
 
     opens mwilson.fxschedule to javafx.fxml;
     exports mwilson.fxschedule;
+    exports mwilson.fxschedule.Model;
 }
