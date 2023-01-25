@@ -31,4 +31,20 @@ public class DBCountries {
 
         return clist;
     }
+    public static String CountryIDtoCountryName(int countryId) throws SQLException {
+        ResultSet rs;
+        String countryName = null;
+        try {
+            String sql = "SELECT Country FROM " + tableName + " WHERE Country_ID = " + countryId;
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()){
+                countryName = rs.getString("Country");
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return countryName;
+    }
 }

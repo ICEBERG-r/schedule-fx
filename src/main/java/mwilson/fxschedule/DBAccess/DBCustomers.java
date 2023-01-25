@@ -8,12 +8,15 @@ import javafx.collections.ObservableList;
 import java.sql.*;
 public class DBCustomers {
 
+
     public static String tableName = "customers";
     public static ObservableList<Customer> getAllCustomers(){
         ObservableList<Customer> clist = FXCollections.observableArrayList();
 
         try {
-            String sql = "SELECT * from customers";
+            String sql = "SELECT c.Customer_ID, c.Customer_Name, c.Address, c.Postal_Code, c.phone, d.division, r.Country FROM customers c\n" +
+                    "JOIN first_level_divisions d on c.Division_ID = d.Division_ID\n" +
+                    "JOIN countries r on d.Country_ID = r.Country_ID;";
 
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
 
@@ -25,8 +28,11 @@ public class DBCustomers {
                 String address = rs.getString("Address");
                 String postalCode = rs.getString("Postal_Code");
                 String phone = rs.getString("Phone");
-                Customer C = new Customer(customerID, customerName, address, postalCode, phone);
-                clist.add(C);
+                String division = rs.getString("Division");
+                String country = rs.getString("Country");
+
+                Customer row = new Customer(customerID, customerName, address, postalCode, phone, division, country);
+                clist.add(row);
             }
         } catch (SQLException throwables){
             throwables.printStackTrace();

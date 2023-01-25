@@ -29,7 +29,9 @@ public class DBAppointments {
                 String type = rs.getString("Type");
                 Timestamp start = rs.getTimestamp("Start");
                 Timestamp end = rs.getTimestamp("End");
-                Appointment A = new Appointment(appointmentID, title, description, location, type, start.toLocalDateTime(), end.toLocalDateTime());
+                int customerId = rs.getInt("Customer_ID");
+                int userId = rs.getInt("User_ID");
+                Appointment A = new Appointment(appointmentID, title, description, location, type, start.toLocalDateTime(), end.toLocalDateTime(), customerId, userId);
                 alist.add(A);
             }
         } catch (SQLException throwables){
@@ -76,4 +78,5 @@ public class DBAppointments {
         ps.setInt(1, appointmentID);
         return ps.executeUpdate();
     }
+
 }

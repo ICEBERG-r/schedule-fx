@@ -13,8 +13,16 @@ public class FirstLevelDivision {
         return divisionID;
     }
 
+    public void setDivisionID(int divisionID){
+        this.divisionID = divisionID;
+    }
+
     public String getDivision() {
         return division;
     }
+    public void setDivision(String division) {
+        this.division = division;
+    }
+    public String toString() { return division; }
 
 }

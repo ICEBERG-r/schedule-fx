@@ -33,5 +33,14 @@ public class Helper {
         }
     }
 
+    public static void ExitProgramPromptFrench(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Quitter");
+        alert.setHeaderText("Êtes-vous sûr de vouloir quitter?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get().equals(ButtonType.OK)){
+            System.exit(0);
+        }
+    }
 
 }

@@ -1,25 +1,25 @@
 package mwilson.fxschedule;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import mwilson.fxschedule.DBAccess.*;
 import mwilson.fxschedule.Database.DBConnection;
-import mwilson.fxschedule.Model.Country;
-import mwilson.fxschedule.Model.Customer;
 import mwilson.fxschedule.Utilities.Helper;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.ZoneId;
+import java.util.Locale;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class LogInController implements Initializable {
@@ -31,39 +31,51 @@ public class LogInController implements Initializable {
     public Button exitButton;
     public Label zoneIDLabel;
     public Button dbTest;
+    public Label usernameLabel;
+    public Label passwordLabel;
+    public Label titleLabel;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
+        zoneIDLabel.setText(ZoneId.systemDefault().toString());
+        System.out.println(Locale.getDefault());
 
+        if (Locale.getDefault().toString().equals("fr_FR")){
+            exitButton.setText("Quitter");
+            loginButton.setText("Connexion");
+            usernameLabel.setText("Nom d'utilisateur");
+            passwordLabel.setText("le mot de passe");
+            titleLabel.setText("assistante de planification");
+        }
     }
 
     public void OnExitClicked(ActionEvent actionEvent) {
 
         //check for language using a switch statement. only EN or FR for this assignment
-        Helper.ExitProgramPrompt();
-
+        if (Locale.getDefault().toString().equals("fr_FR")){
+            Helper.ExitProgramPromptFrench();
+        }
+        else {
+            Helper.ExitProgramPrompt();
+        }
     }
 
-    public void OnLoginButtonClicked(ActionEvent actionEvent) throws IOException {
+    public void OnLoginButtonClicked(ActionEvent actionEvent) {
 
-        //log in not working
-        //probably need another method of reading the pw from DB
-        //Password is "text" in the DB, and not varchar as expected?
-        //can the "text" not be converted to a string?
         try {
         String uname = usernameLoginField.getText();
         String pw = passwordLoginField.getText();
+        String actualpw = null;
 
         String sql = "SELECT Password FROM Users WHERE User_Name = ?";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
         ps.setString(1, uname);
         ResultSet rs = ps.executeQuery();
 
+        if (rs.next()){
+            actualpw = rs.getString("Password");
+        }
 
-        String actualPw = (String) rs.getObject("Password");
-            System.out.println(uname);
-            System.out.println(pw);
-            System.out.println(actualPw);
-        if (pw.equals(actualPw)) {
+        if (pw.equals(actualpw)) {
                 Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
                 Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
                 Scene scene = new Scene(root);
@@ -72,10 +84,20 @@ public class LogInController implements Initializable {
                 stage.show();
             }
             else {
-                Helper.DisplayInfoAlert("Log-in Error", "Username and Password combination is incorrect");
+                if (Locale.getDefault().toString().equals("fr_FR")){
+                    Helper.DisplayInfoAlert("Erreur d'identification", "La combinaison du nom d'utilisateur et du mot de passe est incorrecte");
+                }
+                else {
+                    Helper.DisplayInfoAlert("Log-in Error", "Username and Password combination is incorrect");
+                }
         }
         } catch (Exception e){
-            Helper.DisplayInfoAlert("Log-in Error", "Username and Password combination is incorrect");
+            if (Locale.getDefault().toString().equals("fr_FR")){
+                Helper.DisplayInfoAlert("Erreur d'identification", "La combinaison du nom d'utilisateur et du mot de passe est incorrecte");
+            }
+            else {
+                Helper.DisplayInfoAlert("Log-in Error", "Username and Password combination is incorrect");
+            }
         }
 
 

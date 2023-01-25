@@ -2,8 +2,8 @@ package mwilson.fxschedule.Model;
 
 
 public class Country {
-    private int countryID;
-    private String country;
+    private final int countryID;
+    private final String country;
 
     public Country(int countryID, String country){
         this.countryID = countryID;
@@ -14,8 +14,6 @@ public class Country {
         return countryID;
     }
 
-    public String getCountry(){
-        return country;
-    }
+    public String toString() {return country;}
 
 }
