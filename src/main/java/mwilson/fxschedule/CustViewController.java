@@ -1,5 +1,6 @@
 package mwilson.fxschedule;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,7 +25,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class CustViewController implements Initializable {
-    public static int selectedCustomerID;
+    public static Customer selectedCustomer;
     public Button cancelButton;
     public Button saveButton;
     public TextField idField;
@@ -36,14 +37,32 @@ public class CustViewController implements Initializable {
     public ComboBox<FirstLevelDivision> divisionCombo;
 
     public void initialize(URL url, ResourceBundle resourceBundle){
-        countryCombo.setItems(DBCountries.getAllCountries());
-        divisionCombo.setItems(DBDivisions.getAllDivisions());
+        ObservableList<Country> countryList = DBCountries.getAllCountries();
+        ObservableList<FirstLevelDivision> divisionList = DBDivisions.getAllDivisions();
+        countryCombo.setItems(countryList);
+        countryList.forEach(country -> {
+            if (Objects.equals(country.toString(), selectedCustomer.getCountry())){
+                countryCombo.setValue(country);
+            }
+        });
+        divisionCombo.setItems(divisionList);
+        divisionList.forEach(firstLevelDivision -> {
+            if (Objects.equals(firstLevelDivision.toString(), selectedCustomer.getDivision())){
+                divisionCombo.setValue(firstLevelDivision);
+            }
+        });
+
+        setSelectedCustomer(selectedCustomer);
 
     }
 
     public void setSelectedCustomer(Customer selectedCustomer){
         // how to set initial Country and Division?
-
+        idField.setText(Integer.toString(selectedCustomer.getCustomerID()));
+        nameField.setText(selectedCustomer.getCustomerName());
+        addressField.setText(selectedCustomer.getAddress());
+        postalField.setText(selectedCustomer.getPostalCode());
+        phoneField.setText(selectedCustomer.getPhone());
     }
     public void OnCancelButtonClicked(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

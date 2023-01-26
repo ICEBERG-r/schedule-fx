@@ -72,6 +72,7 @@ public class DirectoryController implements Initializable {
     }
 
     public void OnViewCustomerButtonClicked(ActionEvent actionEvent) throws IOException {
+        CustViewController.selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
         System.out.println(customerTable.getSelectionModel().getSelectedItem());
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("CustomerView.fxml")));
         Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
