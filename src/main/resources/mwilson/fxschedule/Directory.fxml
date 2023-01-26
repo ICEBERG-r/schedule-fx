@@ -27,16 +27,16 @@
       </TableView>
       <TableView fx:id="appointmentTable" layoutX="31.0" layoutY="316.0" prefHeight="203.0" prefWidth="566.0">
          <columns>
-            <TableColumn fx:id="appointmentIDColumn" prefWidth="75.0" text="Appointment ID"/>
-            <TableColumn fx:id="appointmentTitleColumn" prefWidth="75.0" text="Title"/>
-            <TableColumn fx:id="appointmentDescriptionColumn" prefWidth="75.0" text="Description"/>
-            <TableColumn fx:id="appointmentLocationColumn" prefWidth="75.0" text="Location"/>
-            <TableColumn fx:id="appointmentContactColumn" prefWidth="75.0" text="Contact"/>
-            <TableColumn fx:id="appointmentTypeColumn" prefWidth="75.0" text="Type"/>
-            <TableColumn fx:id="appointmentStartColumn" prefWidth="75.0" text="Start"/>
-            <TableColumn fx:id="appointmentEndColumn" prefWidth="75.0" text="End"/>
-            <TableColumn fx:id="appointmentCustomerIDColumn" prefWidth="75.0" text="Customer ID"/>
-            <TableColumn fx:id="appointmentUserIDColumn" prefWidth="75.0" text="User ID"/>
+            <TableColumn fx:id="aColAppointmentID" prefWidth="75.0" text="Appointment ID"/>
+            <TableColumn fx:id="aColTitle" prefWidth="75.0" text="Title"/>
+            <TableColumn fx:id="aColDescription" prefWidth="75.0" text="Description"/>
+            <TableColumn fx:id="aColLocation" prefWidth="75.0" text="Location"/>
+            <TableColumn fx:id="aColType" prefWidth="75.0" text="Type"/>
+            <TableColumn fx:id="aColStart" prefWidth="75.0" text="Start"/>
+            <TableColumn fx:id="aColEnd" prefWidth="75.0" text="End"/>
+            <TableColumn fx:id="aColContactID" prefWidth="75.0" text="Contact ID"/>
+            <TableColumn fx:id="aColCustomerID" prefWidth="75.0" text="Customer ID"/>
+            <TableColumn fx:id="aColUserID" prefWidth="75.0" text="User ID"/>
          </columns>
       </TableView>
       <RadioButton fx:id="allAppointmentsRadio" layoutX="214.0" layoutY="291.0" mnemonicParsing="false" onAction="#onAllAppointmentsSelected" selected="true" text="All">

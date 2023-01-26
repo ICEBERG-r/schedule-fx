@@ -29,9 +29,10 @@ public class DBAppointments {
                 String type = rs.getString("Type");
                 Timestamp start = rs.getTimestamp("Start");
                 Timestamp end = rs.getTimestamp("End");
+                int contactID = rs.getInt("Contact_ID");
                 int customerId = rs.getInt("Customer_ID");
                 int userId = rs.getInt("User_ID");
-                Appointment A = new Appointment(appointmentID, title, description, location, type, start.toLocalDateTime(), end.toLocalDateTime(), customerId, userId);
+                Appointment A = new Appointment(appointmentID, title, description, location, type, start.toLocalDateTime(), end.toLocalDateTime(), contactID, customerId, userId);
                 alist.add(A);
             }
         } catch (SQLException throwables){
@@ -60,7 +61,7 @@ public class DBAppointments {
         String sql = "UPDATE appointments SET Title = ? Description = ? Location = ? Type = ? Start = ? End = ? " +
                 "Customer_ID = ? User_ID = ? Contact_ID = ? WHERE Appointment_ID = ?";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
-        ps.setString(1,title);
+        ps.setString(1, title);
         ps.setString(2, description);
         ps.setString(3, location);
         ps.setString(4, type);

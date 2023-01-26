@@ -29,8 +29,8 @@
       <TextArea fx:id="descriptionArea" layoutX="42.0" layoutY="186.0" prefHeight="200.0" prefWidth="200.0" />
       <ComboBox fx:id="contactBox" layoutX="415.0" layoutY="261.0" prefWidth="150.0" />
       <Label layoutX="354.0" layoutY="266.0" text="Contact" />
-      <TextField layoutX="405.0" layoutY="311.0" />
-      <TextField layoutX="405.0" layoutY="360.0" />
+      <TextField fx:id="customerIdField" layoutX="405.0" layoutY="311.0" />
+      <TextField fx:id="userIdField" layoutX="405.0" layoutY="360.0" />
       <Label layoutX="331.0" layoutY="316.0" text="Customer ID" />
       <Label layoutX="350.0" layoutY="365.0" text="User ID" />
     </children>

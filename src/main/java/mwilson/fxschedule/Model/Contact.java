@@ -20,4 +20,7 @@ public class Contact {
     public String getContactEmail(){
         return email;
     }
+    public String toString(){
+        return contactName + ": " + email;
+    }
 }

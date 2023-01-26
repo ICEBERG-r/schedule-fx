@@ -23,7 +23,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class CustCreateController implements Initializable {
-    public static int selectedCustomerID;
     public Button cancelButton;
     public Button saveButton;
     public TextField idField;

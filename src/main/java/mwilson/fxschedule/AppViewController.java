@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import mwilson.fxschedule.DBAccess.DBContacts;
 import mwilson.fxschedule.Model.Appointment;
 import mwilson.fxschedule.Model.Contact;
 
@@ -29,17 +30,23 @@ public class AppViewController implements Initializable {
     public ComboBox<Contact> contactBox;
 
     public static Appointment selectedAppointment;
+    public TextField customerIdField;
+    public TextField userIdField;
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        contactBox.setItems(DBContacts.getAllContacts());
         setSelectedAppointment(selectedAppointment);
     }
 
     public void setSelectedAppointment(Appointment selectedAppointment){
-        idField.setText(Integer.toString(selectedAppointment.getAppointmentId()));
+        idField.setText(Integer.toString(selectedAppointment.getAppointmentID()));
         titleField.setText(selectedAppointment.getTitle());
         locationField.setText(selectedAppointment.getLocation());
         typeField.setText(selectedAppointment.getType());
         descriptionArea.setText(selectedAppointment.getDescription());
+        customerIdField.setText(Integer.toString(selectedAppointment.getCustomerID()));
+        userIdField.setText(Integer.toString(selectedAppointment.getUserID()));
     }
     public void OnCancelButtonClicked(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

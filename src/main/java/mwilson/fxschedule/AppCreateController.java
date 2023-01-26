@@ -2,17 +2,21 @@ package mwilson.fxschedule;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import mwilson.fxschedule.DBAccess.DBContacts;
 import mwilson.fxschedule.Model.Contact;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
-public class AppCreateController {
+public class AppCreateController implements Initializable {
     public Button cancelButton;
     public Button saveButton;
     public TextField idField;
@@ -23,6 +27,10 @@ public class AppCreateController {
     public DatePicker endDateBox;
     public TextArea descriptionArea;
     public ComboBox<Contact> contactBox;
+
+    public void initialize(URL url, ResourceBundle resourceBundle){
+        contactBox.setItems(DBContacts.getAllContacts());
+    }
 
     public void OnCancelButtonClicked(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

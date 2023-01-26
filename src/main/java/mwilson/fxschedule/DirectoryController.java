@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import mwilson.fxschedule.DBAccess.DBAppointments;
 import mwilson.fxschedule.DBAccess.DBCustomers;
 import mwilson.fxschedule.Model.Appointment;
 import mwilson.fxschedule.Model.Customer;
@@ -42,6 +43,16 @@ public class DirectoryController implements Initializable {
     public ToggleGroup appointments;
     public RadioButton thisWeekRadio;
     public RadioButton thisMonthRadio;
+    public TableColumn<Appointment, String> aColAppointmentID;
+    public TableColumn<Appointment, String> aColTitle;
+    public TableColumn<Appointment, String> aColDescription;
+    public TableColumn<Appointment, String> aColLocation;
+    public TableColumn<Appointment, String> aColType;
+    public TableColumn<Appointment, String> aColStart;
+    public TableColumn<Appointment, String> aColEnd;
+    public TableColumn<Appointment, String> aColContactID;
+    public TableColumn<Appointment, String> aColCustomerID;
+    public TableColumn<Appointment, String> aColUserID;
 
 
 
@@ -56,8 +67,19 @@ public class DirectoryController implements Initializable {
         cColDivision.setCellValueFactory(new PropertyValueFactory<>("division"));
         cColCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
 
+        aColAppointmentID.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+        aColTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        aColDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        aColLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
+        aColType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        aColStart.setCellValueFactory(new PropertyValueFactory<>("start"));
+        aColEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
+        aColContactID.setCellValueFactory(new PropertyValueFactory<>("contactID"));
+        aColCustomerID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        aColUserID.setCellValueFactory(new PropertyValueFactory<>("userID"));
+
         customerTable.setItems(DBCustomers.getAllCustomers());
-        System.out.println(DBCustomers.getAllCustomers());
+        appointmentTable.setItems(DBAppointments.getAllAppointments());
 
 
     }
@@ -92,6 +114,7 @@ public class DirectoryController implements Initializable {
     }
 
     public void OnViewAppointmentButtonClicked(ActionEvent actionEvent) throws IOException {
+        AppViewController.selectedAppointment = appointmentTable.getSelectionModel().getSelectedItem();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("AppointmentView.fxml")));
         Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
