@@ -1,5 +1,6 @@
 package mwilson.fxschedule;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,7 +36,13 @@ public class AppViewController implements Initializable {
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        ObservableList<Contact> contactList = DBContacts.getAllContacts();
         contactBox.setItems(DBContacts.getAllContacts());
+        contactList.forEach(contact -> {
+            if(Objects.equals(contact.toString(), selectedAppointment.getContact())){
+                contactBox.setValue(contact);
+            }
+        });
         setSelectedAppointment(selectedAppointment);
     }
 

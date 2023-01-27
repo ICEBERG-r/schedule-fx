@@ -50,7 +50,7 @@ public class DirectoryController implements Initializable {
     public TableColumn<Appointment, String> aColType;
     public TableColumn<Appointment, String> aColStart;
     public TableColumn<Appointment, String> aColEnd;
-    public TableColumn<Appointment, String> aColContactID;
+    public TableColumn<Appointment, String> aColContact;
     public TableColumn<Appointment, String> aColCustomerID;
     public TableColumn<Appointment, String> aColUserID;
 
@@ -74,7 +74,7 @@ public class DirectoryController implements Initializable {
         aColType.setCellValueFactory(new PropertyValueFactory<>("type"));
         aColStart.setCellValueFactory(new PropertyValueFactory<>("start"));
         aColEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
-        aColContactID.setCellValueFactory(new PropertyValueFactory<>("contactID"));
+        aColContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
         aColCustomerID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         aColUserID.setCellValueFactory(new PropertyValueFactory<>("userID"));
 

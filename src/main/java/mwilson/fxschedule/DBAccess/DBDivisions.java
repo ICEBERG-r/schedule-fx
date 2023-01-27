@@ -64,4 +64,21 @@ public class DBDivisions {
         }
         return countryId;
     }
+    public static int GetIDFromDivision(String division){
+        int divisionId = 0;
+        try {
+            ResultSet rs;
+            String sql = "SELECT Division_ID FROM first_level_divisions WHERE Division = ?";
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+            ps.setString(1, division);
+            rs = ps.executeQuery();
+            if (rs.next()){
+                divisionId = rs.getInt("Division_ID");
+            }
+
+        } catch (SQLException throwables){
+            throwables.printStackTrace();
+        }
+        return divisionId;
+    }
 }

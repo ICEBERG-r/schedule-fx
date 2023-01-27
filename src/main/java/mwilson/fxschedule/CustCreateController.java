@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import mwilson.fxschedule.DBAccess.DBCountries;
+import mwilson.fxschedule.DBAccess.DBCustomers;
 import mwilson.fxschedule.DBAccess.DBDivisions;
 import mwilson.fxschedule.Database.DBConnection;
 import mwilson.fxschedule.Model.Country;
@@ -55,12 +56,16 @@ public class CustCreateController implements Initializable {
     }
 
     //Does not save info yet. Returns to Directory.
-    public void OnSaveButtonClicked(ActionEvent actionEvent) throws IOException {
+    public void OnSaveButtonClicked(ActionEvent actionEvent) throws IOException, SQLException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Save");
         alert.setHeaderText("Are you sure you want to save?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get().equals(ButtonType.OK)){
+            System.out.println(divisionCombo.getValue().toString());
+            int divisionID = DBDivisions.GetIDFromDivision(divisionCombo.getValue().toString());
+            DBCustomers.insert(nameField.getText(), addressField.getText(), postalField.getText(), phoneField.getText(),
+                    divisionID);
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
             Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);

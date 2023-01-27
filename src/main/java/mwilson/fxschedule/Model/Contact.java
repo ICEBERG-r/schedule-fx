@@ -21,6 +21,6 @@ public class Contact {
         return email;
     }
     public String toString(){
-        return contactName + ": " + email;
+        return contactName;
     }
 }
