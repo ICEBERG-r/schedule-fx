@@ -62,7 +62,6 @@ public class CustCreateController implements Initializable {
         alert.setHeaderText("Are you sure you want to save?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get().equals(ButtonType.OK)){
-            System.out.println(divisionCombo.getValue().toString());
             int divisionID = DBDivisions.GetIDFromDivision(divisionCombo.getValue().toString());
             DBCustomers.insert(nameField.getText(), addressField.getText(), postalField.getText(), phoneField.getText(),
                     divisionID);

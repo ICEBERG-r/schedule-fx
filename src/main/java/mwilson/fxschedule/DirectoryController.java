@@ -12,9 +12,11 @@ import mwilson.fxschedule.DBAccess.DBAppointments;
 import mwilson.fxschedule.DBAccess.DBCustomers;
 import mwilson.fxschedule.Model.Appointment;
 import mwilson.fxschedule.Model.Customer;
+import mwilson.fxschedule.Utilities.Helper;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -95,7 +97,6 @@ public class DirectoryController implements Initializable {
 
     public void OnViewCustomerButtonClicked(ActionEvent actionEvent) throws IOException {
         CustViewController.selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
-        System.out.println(customerTable.getSelectionModel().getSelectedItem());
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("CustomerView.fxml")));
         Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
@@ -114,13 +115,17 @@ public class DirectoryController implements Initializable {
     }
 
     public void OnViewAppointmentButtonClicked(ActionEvent actionEvent) throws IOException {
-        AppViewController.selectedAppointment = appointmentTable.getSelectionModel().getSelectedItem();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("AppointmentView.fxml")));
-        Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setTitle("Directory");
-        stage.setScene(scene);
-        stage.show();
+        if (!customerTable.getSelectionModel().isEmpty()) {
+            AppViewController.selectedAppointment = appointmentTable.getSelectionModel().getSelectedItem();
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("AppointmentView.fxml")));
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setTitle("Directory");
+            stage.setScene(scene);
+            stage.show();
+        } else {
+            Helper.DisplayInfoAlert("No customer selected", "A customer must be selected from the table.");
+        }
     }
 
     public void OnExitButtonClicked(ActionEvent actionEvent) {
@@ -133,8 +138,22 @@ public class DirectoryController implements Initializable {
         }
     }
 
-    public void OnDeleteCustomerButtonClicked(ActionEvent actionEvent) {
-        System.out.println(customerTable.getSelectionModel().getSelectedItem().getPhone());
+    public void OnDeleteCustomerButtonClicked(ActionEvent actionEvent) throws SQLException {
+        if (!customerTable.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Customer");
+            alert.setHeaderText("Are you sure you want to delete this customer?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get().equals(ButtonType.OK)) {
+                Customer c = customerTable.getSelectionModel().getSelectedItem();
+                int id = c.getCustomerID();
+                DBCustomers.delete(id);
+                customerTable.setItems(DBCustomers.getAllCustomers());
+                Helper.DisplayInfoAlert("Customer deleted", c.getCustomerName() + " has been deleted.");
+            }
+        } else {
+            Helper.DisplayInfoAlert("No customer selected", "A customer must be selected from the table.");
+        }
     }
 
     public void OnDeleteAppointmentButtonClicked(ActionEvent actionEvent) {

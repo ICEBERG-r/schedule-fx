@@ -53,8 +53,8 @@ public class DBCustomers {
     }
 
     public static int update(int customerID, String name, String address, String postalCode, String phone, int divisionID) throws SQLException {
-        String sql = "UPDATE customers SET Customer_Name = ? Address = ? Postal_Code = ? Phone = ? Division_ID = ? " +
-                "WHERE Customer_ID = ?";
+        String sql = "UPDATE customers \nSET Customer_Name = ?, \nAddress = ?, \nPostal_Code = ?, \nPhone = ?, \nDivision_ID = ? " +
+                "\nWHERE Customer_ID = ?";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
         ps.setString(1, name);
         ps.setString(2, address);
@@ -66,10 +66,15 @@ public class DBCustomers {
     }
 
     public static int delete(int customerID) throws SQLException {
-        String sql = "DELETE FROM appointments WHERE Customer_ID = ?; DELETE FROM customers WHERE Customer_ID = ?";
+        String sql = "DELETE FROM appointments WHERE Customer_ID = ?";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
         ps.setInt(1, customerID);
-        ps.setInt(2, customerID);
+        ps.executeUpdate();
+
+        sql = "DELETE FROM customers WHERE Customer_ID = ?";
+        ps = DBConnection.getConnection().prepareStatement(sql);
+        ps.setInt(1, customerID);
+
         return ps.executeUpdate();
     }
 }

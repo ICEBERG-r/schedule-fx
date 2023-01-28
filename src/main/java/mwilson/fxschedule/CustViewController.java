@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import mwilson.fxschedule.DBAccess.DBCountries;
+import mwilson.fxschedule.DBAccess.DBCustomers;
 import mwilson.fxschedule.DBAccess.DBDivisions;
 import mwilson.fxschedule.Database.DBConnection;
 import mwilson.fxschedule.Model.Country;
@@ -37,6 +38,17 @@ public class CustViewController implements Initializable {
     public ComboBox<FirstLevelDivision> divisionCombo;
 
     public void initialize(URL url, ResourceBundle resourceBundle){
+        setSelectedCustomer(selectedCustomer);
+    }
+
+    public void setSelectedCustomer(Customer selectedCustomer){
+        // how to set initial Country and Division?
+        idField.setText(Integer.toString(selectedCustomer.getCustomerID()));
+        nameField.setText(selectedCustomer.getCustomerName());
+        addressField.setText(selectedCustomer.getAddress());
+        postalField.setText(selectedCustomer.getPostalCode());
+        phoneField.setText(selectedCustomer.getPhone());
+
         ObservableList<Country> countryList = DBCountries.getAllCountries();
         ObservableList<FirstLevelDivision> divisionList = DBDivisions.getAllDivisions();
         countryCombo.setItems(countryList);
@@ -51,18 +63,6 @@ public class CustViewController implements Initializable {
                 divisionCombo.setValue(firstLevelDivision);
             }
         });
-
-        setSelectedCustomer(selectedCustomer);
-
-    }
-
-    public void setSelectedCustomer(Customer selectedCustomer){
-        // how to set initial Country and Division?
-        idField.setText(Integer.toString(selectedCustomer.getCustomerID()));
-        nameField.setText(selectedCustomer.getCustomerName());
-        addressField.setText(selectedCustomer.getAddress());
-        postalField.setText(selectedCustomer.getPostalCode());
-        phoneField.setText(selectedCustomer.getPhone());
     }
     public void OnCancelButtonClicked(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -79,12 +79,15 @@ public class CustViewController implements Initializable {
         }
     }
 
-    public void OnSaveButtonClicked(ActionEvent actionEvent) throws IOException {
+    public void OnSaveButtonClicked(ActionEvent actionEvent) throws IOException, SQLException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Save");
         alert.setHeaderText("Are you sure you want to save?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get().equals(ButtonType.OK)){
+            int divisionID = DBDivisions.GetIDFromDivision(divisionCombo.getValue().toString());
+            DBCustomers.update(selectedCustomer.getCustomerID(), nameField.getText(), addressField.getText(),
+                    postalField.getText(),phoneField.getText(),divisionID);
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
             Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);

@@ -1,6 +1,5 @@
 package mwilson.fxschedule.Model;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class Appointment {
