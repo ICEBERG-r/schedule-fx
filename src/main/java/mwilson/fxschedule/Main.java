@@ -4,11 +4,9 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import mwilson.fxschedule.DBAccess.DBDivisions;
 import mwilson.fxschedule.Database.DBConnection;
 
 import java.io.IOException;
-import java.util.Locale;
 
 public class Main extends Application {
     @Override

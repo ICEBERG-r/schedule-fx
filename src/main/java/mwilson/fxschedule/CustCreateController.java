@@ -62,7 +62,7 @@ public class CustCreateController implements Initializable {
         alert.setHeaderText("Are you sure you want to save?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get().equals(ButtonType.OK)){
-            int divisionID = DBDivisions.GetIDFromDivision(divisionCombo.getValue().toString());
+            int divisionID = divisionCombo.getValue().getDivisionID();
             DBCustomers.insert(nameField.getText(), addressField.getText(), postalField.getText(), phoneField.getText(),
                     divisionID);
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));

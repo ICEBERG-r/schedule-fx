@@ -62,8 +62,8 @@ public class DBAppointments {
         return ps.executeUpdate();
     }
     public static int update(int appointmentID, String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, int customerID, int userID, int contactID) throws SQLException {
-        String sql = "UPDATE appointments SET Title = ? Description = ? Location = ? Type = ? Start = ? End = ? " +
-                "Customer_ID = ? User_ID = ? Contact_ID = ? WHERE Appointment_ID = ?";
+        String sql = "UPDATE appointments \nSET Title = ?, \nDescription = ?, \nLocation = ?, \nType = ?, \nStart = ?, \nEnd = ?, " +
+                "\nCustomer_ID = ?, \nUser_ID = ?, \nContact_ID = ? \nWHERE Appointment_ID = ?";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
         ps.setString(1, title);
         ps.setString(2, description);

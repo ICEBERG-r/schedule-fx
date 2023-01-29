@@ -115,7 +115,7 @@ public class DirectoryController implements Initializable {
     }
 
     public void OnViewAppointmentButtonClicked(ActionEvent actionEvent) throws IOException {
-        if (!customerTable.getSelectionModel().isEmpty()) {
+        if (!appointmentTable.getSelectionModel().isEmpty()) {
             AppViewController.selectedAppointment = appointmentTable.getSelectionModel().getSelectedItem();
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("AppointmentView.fxml")));
             Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
@@ -124,7 +124,7 @@ public class DirectoryController implements Initializable {
             stage.setScene(scene);
             stage.show();
         } else {
-            Helper.DisplayInfoAlert("No customer selected", "A customer must be selected from the table.");
+            Helper.DisplayInfoAlert("No appointment selected", "An appointment must be selected from the table.");
         }
     }
 
@@ -146,9 +146,9 @@ public class DirectoryController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get().equals(ButtonType.OK)) {
                 Customer c = customerTable.getSelectionModel().getSelectedItem();
-                int id = c.getCustomerID();
-                DBCustomers.delete(id);
+                DBCustomers.delete(c.getCustomerID());
                 customerTable.setItems(DBCustomers.getAllCustomers());
+                appointmentTable.setItems(DBAppointments.getAllAppointments());
                 Helper.DisplayInfoAlert("Customer deleted", c.getCustomerName() + " has been deleted.");
             }
         } else {
@@ -156,7 +156,24 @@ public class DirectoryController implements Initializable {
         }
     }
 
-    public void OnDeleteAppointmentButtonClicked(ActionEvent actionEvent) {
+    public void OnDeleteAppointmentButtonClicked(ActionEvent actionEvent) throws SQLException {
+        if (!appointmentTable.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Cancel Appointment");
+            alert.setHeaderText("Are you sure you want to cancel this appointment?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get().equals(ButtonType.OK)) {
+                Appointment a = appointmentTable.getSelectionModel().getSelectedItem();
+                DBAppointments.delete(a.getAppointmentID());
+                customerTable.setItems(DBCustomers.getAllCustomers());
+                appointmentTable.setItems(DBAppointments.getAllAppointments());
+                Helper.DisplayInfoAlert("Appointment Cancelled", "Appointment " + a.getAppointmentID()
+                        + " has been cancelled.");
+            }
+        } else {
+            Helper.DisplayInfoAlert("No appointment selected", "An appointment must be selected from the " +
+                    "table.");
+        }
     }
 
     public void OnReportsClicked(ActionEvent actionEvent) {
