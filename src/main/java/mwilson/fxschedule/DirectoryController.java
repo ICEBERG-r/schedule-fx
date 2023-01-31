@@ -1,5 +1,7 @@
 package mwilson.fxschedule;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -10,6 +12,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import mwilson.fxschedule.DBAccess.DBAppointments;
 import mwilson.fxschedule.DBAccess.DBCustomers;
+import mwilson.fxschedule.DBAccess.DBUsers;
 import mwilson.fxschedule.Model.Appointment;
 import mwilson.fxschedule.Model.Customer;
 import mwilson.fxschedule.Utilities.Helper;
@@ -17,9 +20,11 @@ import mwilson.fxschedule.Utilities.Helper;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DirectoryController implements Initializable {
     public Button newCustomerButton;
@@ -55,10 +60,30 @@ public class DirectoryController implements Initializable {
     public TableColumn<Appointment, String> aColContact;
     public TableColumn<Appointment, String> aColCustomerID;
     public TableColumn<Appointment, String> aColUserID;
-
-
+    public int userID;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        DBUsers.getAllUsers().forEach(user -> {
+            if (Objects.equals(user.getUserName(), LogInController.userName)){
+                userID = user.getUserID();
+            }
+        });
+        ObservableList<Appointment> appointmentsSoon = FXCollections.observableArrayList();
+        DBAppointments.getAllAppointments().forEach(appointment -> {
+            if ((appointment.getUserID() == userID) && appointment.getStart().isAfter(LocalDateTime.now()) &&
+                        appointment.getStart().isBefore(LocalDateTime.now().plusMinutes(15))){
+                    appointmentsSoon.add(appointment);
+                    Helper.DisplayInfoAlert("Appointment in the next fifteen minutes","Appointment " + appointment.getAppointmentID() +
+                            " begins at " + appointment.getStart().toLocalTime() + " on " + appointment.getStart().toLocalDate() +
+                            ".");
+            }
+        });
+        if (appointmentsSoon.isEmpty()){
+            Helper.DisplayInfoAlert("Alert!", "There are no appointments scheduled in the next fifteen minutes.");
+        }
+
+
 
 
         cColCustomerID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
@@ -180,11 +205,33 @@ public class DirectoryController implements Initializable {
     }
 
     public void onAllAppointmentsSelected(ActionEvent actionEvent) {
+        appointmentTable.setItems(DBAppointments.getAllAppointments());
     }
 
     public void OnThisWeekSelected(ActionEvent actionEvent) {
+        ObservableList<Appointment> all = DBAppointments.getAllAppointments();
+        ObservableList<Appointment> thisWeek =FXCollections.observableArrayList();
+        all.forEach(appointment -> {
+            if (appointment.getStart().isAfter(LocalDateTime.now()) &&
+                    appointment.getStart().isBefore(LocalDateTime.now().plusWeeks(1))){
+                thisWeek.add(appointment);
+            }
+        });
+
+        appointmentTable.setItems(thisWeek);
     }
 
     public void OnThisMonthSelected(ActionEvent actionEvent) {
+        ObservableList<Appointment> all = DBAppointments.getAllAppointments();
+        ObservableList<Appointment> thisMonth = FXCollections.observableArrayList();
+
+        all.forEach(appointment -> {
+            if (appointment.getStart().isAfter(LocalDateTime.now()) &&
+                    appointment.getStart().isBefore(LocalDateTime.now().plusMonths(1))){
+                thisMonth.add(appointment);
+            }
+        });
+
+        appointmentTable.setItems(thisMonth);
     }
 }

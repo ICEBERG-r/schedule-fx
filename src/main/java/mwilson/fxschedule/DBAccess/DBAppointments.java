@@ -7,12 +7,19 @@ import mwilson.fxschedule.Model.Appointment;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
 
 public class DBAppointments {
 
     public static String tableName = "appointments";
     public static ObservableList<Appointment> getAllAppointments(){
         ObservableList<Appointment> alist = FXCollections.observableArrayList();
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("MM-dd-yyyy kk:mm");
+
 
         try {
             String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Start, a.End," +
@@ -29,14 +36,19 @@ public class DBAppointments {
                 String description = rs.getString("Description");
                 String location = rs.getString("Location");
                 String type = rs.getString("Type");
-                Timestamp start = rs.getTimestamp("Start");
-                Timestamp end = rs.getTimestamp("End");
+
+
+                LocalDateTime start = rs.getTimestamp("Start").toLocalDateTime();
+
+                LocalDateTime end = rs.getTimestamp("End").toLocalDateTime();
+
                 int contactID = rs.getInt("Contact_ID");
                 String contact = rs.getString("Contact_Name");
                 int customerId = rs.getInt("Customer_ID");
                 int userId = rs.getInt("User_ID");
                 Appointment A = new Appointment(appointmentID, title, description, location, type,
-                        start.toLocalDateTime(), end.toLocalDateTime(), contactID, contact, customerId, userId);
+                        start, end, contactID, contact, customerId, userId);
+
                 alist.add(A);
             }
         } catch (SQLException throwables){

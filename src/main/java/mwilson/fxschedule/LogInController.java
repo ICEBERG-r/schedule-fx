@@ -21,6 +21,7 @@ import java.time.ZoneId;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 public class LogInController implements Initializable {
 
@@ -34,10 +35,10 @@ public class LogInController implements Initializable {
     public Label usernameLabel;
     public Label passwordLabel;
     public Label titleLabel;
+    public static String userName;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         zoneIDLabel.setText(ZoneId.systemDefault().toString());
-        System.out.println(Locale.getDefault());
 
         if (Locale.getDefault().toString().equals("fr_FR")){
             exitButton.setText("Quitter");
@@ -50,7 +51,6 @@ public class LogInController implements Initializable {
 
     public void OnExitClicked(ActionEvent actionEvent) {
 
-        //check for language using a switch statement. only EN or FR for this assignment
         if (Locale.getDefault().toString().equals("fr_FR")){
             Helper.ExitProgramPromptFrench();
         }
@@ -76,6 +76,7 @@ public class LogInController implements Initializable {
         }
 
         if (pw.equals(actualpw)) {
+                userName = uname;
                 Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
                 Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
                 Scene scene = new Scene(root);
