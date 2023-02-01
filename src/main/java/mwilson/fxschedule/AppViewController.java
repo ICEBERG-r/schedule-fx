@@ -116,34 +116,37 @@ public class AppViewController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get().equals(ButtonType.OK)){
             try {
-            LocalDateTime start = LocalDateTime.of(datePicker.getValue(),startTimeBox.getValue());
-            LocalDateTime end = LocalDateTime.of(datePicker.getValue(), endTimeBox.getValue());
-            Instant instantStart = Timestamp.valueOf(start).toInstant();
-            Instant instantEnd = Timestamp.valueOf(end).toInstant();
-            ZoneId zoneId = ZoneId.of(ZoneId.systemDefault().toString());
-            ZonedDateTime startZDT = ZonedDateTime.ofInstant(instantStart, zoneId);
-            ZonedDateTime endZDT = ZonedDateTime.ofInstant(instantEnd, zoneId);
-            ZonedDateTime startEST = startZDT.withZoneSameInstant(ZoneId.of("America/New_York"));
-            ZonedDateTime endEST = endZDT.withZoneSameInstant(ZoneId.of("America/New_York"));
+                LocalDateTime start = LocalDateTime.of(datePicker.getValue(), startTimeBox.getValue());
+                LocalDateTime end = LocalDateTime.of(datePicker.getValue(), endTimeBox.getValue());
+                Instant instantStart = Timestamp.valueOf(start).toInstant();
+                Instant instantEnd = Timestamp.valueOf(end).toInstant();
+                ZoneId zoneId = ZoneId.of(ZoneId.systemDefault().toString());
+                ZonedDateTime startZDT = ZonedDateTime.ofInstant(instantStart, zoneId);
+                ZonedDateTime endZDT = ZonedDateTime.ofInstant(instantEnd, zoneId);
+                ZonedDateTime startEST = startZDT.withZoneSameInstant(ZoneId.of("America/New_York"));
+                ZonedDateTime endEST = endZDT.withZoneSameInstant(ZoneId.of("America/New_York"));
 
-            ObservableList<Appointment> customerAppointments = FXCollections.observableArrayList();
+                ObservableList<Appointment> customerAppointments = FXCollections.observableArrayList();
 
-            DBAppointments.getAllAppointments().forEach(appointment -> {
-                if (Objects.equals(appointment.getCustomerID(), customerBox.getValue().getCustomerID())){
-                    customerAppointments.add(appointment);
-                }
-            });
+                DBAppointments.getAllAppointments().forEach(appointment -> {
+                    if (Objects.equals(appointment.getCustomerID(), customerBox.getValue().getCustomerID())) {
+                        customerAppointments.add(appointment);
+                    }
+                });
 
-            overlappingAppointments = 0;
-            customerAppointments.forEach(appointment -> {
-                if ((start.isAfter(appointment.getStart()) && start.isBefore(appointment.getEnd())) ||
-                        (end.isAfter(appointment.getStart()) && end.isBefore(appointment.getEnd()))){
-                    overlappingAppointments = overlappingAppointments + 1;
-                }
-            });
+                overlappingAppointments = 0;
+                customerAppointments.forEach(appointment -> {
+                    if ((start.isAfter(appointment.getStart()) && start.isBefore(appointment.getEnd())) ||
+                            (end.isAfter(appointment.getStart()) && end.isBefore(appointment.getEnd()))) {
+                        overlappingAppointments = overlappingAppointments + 1;
+                    }
+                });
 
-
-            if ((Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SATURDAY)) ||
+                if (typeField.getText().isEmpty() || descriptionArea.getText().isEmpty() || locationField.getText().isEmpty()
+                        || typeField.getText().isEmpty() || customerBox.getValue() == null || userBox.getValue() == null ||
+                        contactBox.getValue() == null){
+                    Helper.DisplayInfoAlert("Error!", "All fields must be filled");
+            } else if ((Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SATURDAY)) ||
                     (Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SUNDAY))){
                 Helper.DisplayInfoAlert("Error!", "Appointments can only be " +
                         "scheduled on Monday through Friday.");
@@ -169,7 +172,7 @@ public class AppViewController implements Initializable {
             }
         } catch (SQLException e){
                 Helper.DisplayInfoAlert("Error!", "SQL error!");
-            } catch (IOException e){
+            } catch (Exception e){
                 Helper.DisplayInfoAlert("Error!", "All fields must be filled");
             }
     }
