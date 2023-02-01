@@ -113,8 +113,11 @@ public class AppCreateController implements Initializable {
                     }
                 });
 
-
-                if ((Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SATURDAY)) ||
+                    if (typeField.getText().isEmpty() || descriptionArea.getText().isEmpty() || locationField.getText().isEmpty()
+                    || typeField.getText().isEmpty() || customerBox.getValue() == null || userBox.getValue() == null ||
+                    contactBox.getValue() == null) {
+                        Helper.DisplayInfoAlert("Error!","All fields must be filled.");
+            } else if ((Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SATURDAY)) ||
                         (Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SUNDAY))) {
                     Helper.DisplayInfoAlert("Error!", "Appointments can only be " +
                             "scheduled on Monday through Friday.");
@@ -141,8 +144,8 @@ public class AppCreateController implements Initializable {
                 }
             } catch (SQLException e) {
                 Helper.DisplayInfoAlert("Error!", "SQL Error!");
-            } catch (IOException e) {
-                Helper.DisplayInfoAlert("Error!", "Error!");
+            } catch (Exception e) {
+                Helper.DisplayInfoAlert("Error!", "All fields must be filled.");
             }
 
 

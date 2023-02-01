@@ -36,6 +36,7 @@ public class LogInController implements Initializable {
     public Label passwordLabel;
     public Label titleLabel;
     public static String userName;
+    public static boolean firstLogin;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         zoneIDLabel.setText(ZoneId.systemDefault().toString());
@@ -77,6 +78,7 @@ public class LogInController implements Initializable {
 
         if (pw.equals(actualpw)) {
                 userName = uname;
+                firstLogin = true;
                 Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
                 Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
                 Scene scene = new Scene(root);
