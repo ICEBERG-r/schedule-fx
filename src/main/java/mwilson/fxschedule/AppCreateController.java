@@ -46,21 +46,21 @@ public class AppCreateController implements Initializable {
     public ComboBox<User> userBox;
     public int overlappingAppointments;
 
-    public void initialize(URL url, ResourceBundle resourceBundle){
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         contactBox.setItems(DBContacts.getAllContacts());
         customerBox.setItems(DBCustomers.getAllCustomers());
         userBox.setItems(DBUsers.getAllUsers());
-        LocalTime startTime = LocalTime.of(0,0);
-        LocalTime endTime = LocalTime.of(23,45);
+        LocalTime startTime = LocalTime.of(0, 0);
+        LocalTime endTime = LocalTime.of(23, 45);
 
-        while (!startTime.equals(endTime)){
+        while (!startTime.equals(endTime)) {
             startTimeBox.getItems().add(startTime);
             endTimeBox.getItems().add(startTime);
             startTime = startTime.plusMinutes(15);
         }
 
-        startTimeBox.getItems().add(LocalTime.of(23,45));
-        endTimeBox.getItems().add(LocalTime.of(23,45));
+        startTimeBox.getItems().add(LocalTime.of(23, 45));
+        endTimeBox.getItems().add(LocalTime.of(23, 45));
 
 
     }
@@ -81,12 +81,13 @@ public class AppCreateController implements Initializable {
     }
 
     public void OnSaveButtonClicked(ActionEvent actionEvent) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Save");
-            alert.setHeaderText("Are you sure you want to save?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get().equals(ButtonType.OK)){
-                LocalDateTime start = LocalDateTime.of(datePicker.getValue(),startTimeBox.getValue());
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Save");
+        alert.setHeaderText("Are you sure you want to save?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get().equals(ButtonType.OK)) {
+            try {
+                LocalDateTime start = LocalDateTime.of(datePicker.getValue(), startTimeBox.getValue());
                 LocalDateTime end = LocalDateTime.of(datePicker.getValue(), endTimeBox.getValue());
                 Instant instantStart = Timestamp.valueOf(start).toInstant();
                 Instant instantEnd = Timestamp.valueOf(end).toInstant();
@@ -99,54 +100,53 @@ public class AppCreateController implements Initializable {
                 ObservableList<Appointment> customerAppointments = FXCollections.observableArrayList();
 
                 DBAppointments.getAllAppointments().forEach(appointment -> {
-                    if (Objects.equals(appointment.getCustomerID(), customerBox.getValue().getCustomerID())){
+                    if (Objects.equals(appointment.getCustomerID(), customerBox.getValue().getCustomerID())) {
                         customerAppointments.add(appointment);
                     }
                 });
+
                 overlappingAppointments = 0;
                 customerAppointments.forEach(appointment -> {
-                    if ((appointment.getStart().isAfter(start) && appointment.getStart().isBefore(end)) ||
-                            (appointment.getEnd().isAfter(start) && appointment.getEnd().isBefore(end))){
+                    if ((start.isAfter(appointment.getStart()) && start.isBefore(appointment.getEnd())) ||
+                            (end.isAfter(appointment.getStart()) && end.isBefore(appointment.getEnd()))) {
                         overlappingAppointments = overlappingAppointments + 1;
                     }
                 });
 
 
                 if ((Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SATURDAY)) ||
-                        (Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SUNDAY))){
+                        (Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SUNDAY))) {
                     Helper.DisplayInfoAlert("Error!", "Appointments can only be " +
                             "scheduled on Monday through Friday.");
-                }
-                else if (startEST.toLocalTime().isBefore(LocalTime.of(8,0)) ||
-                            endEST.toLocalTime().isAfter(LocalTime.of(22,0))){
+                } else if (startEST.toLocalTime().isBefore(LocalTime.of(8, 0)) ||
+                        endEST.toLocalTime().isAfter(LocalTime.of(22, 0))) {
                     Helper.DisplayInfoAlert("Error!", "Appointments must occur during business hours - " +
                             "8:00 - 22:00 EST");
                 } else if (start.isAfter(end)) {
                     Helper.DisplayInfoAlert("Error!", "Meeting must start before it can end.");
-                } else if (overlappingAppointments > 0){
+                } else if (overlappingAppointments > 0) {
                     Helper.DisplayInfoAlert("Error!", "Customer has another meeting at this time.");
-                }  else {
-                        try {
-                            DBAppointments.insert(titleField.getText(), descriptionArea.getText(), locationField.getText(),
-                                    typeField.getText(), start, end, customerBox.getValue().getCustomerID(), userBox.getValue().getUserID(),
-                                    contactBox.getValue().getContactID());
-                            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
-                            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-                            Scene scene = new Scene(root);
-                            stage.setTitle("Directory");
-                            stage.setScene(scene);
-                            stage.show();
-                        } catch (SQLException e){
-                            Helper.DisplayInfoAlert("Error!", "Fields cannot be blank.");
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                } else {
+
+                    DBAppointments.insert(titleField.getText(), descriptionArea.getText(), locationField.getText(),
+                            typeField.getText(), start, end, customerBox.getValue().getCustomerID(), userBox.getValue().getUserID(),
+                            contactBox.getValue().getContactID());
+                    Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
+                    Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+                    Scene scene = new Scene(root);
+                    stage.setTitle("Directory");
+                    stage.setScene(scene);
+                    stage.show();
+
                 }
-                }
-
-
-
+            } catch (SQLException e) {
+                Helper.DisplayInfoAlert("Error!", "SQL Error!");
+            } catch (IOException e) {
+                Helper.DisplayInfoAlert("Error!", "Error!");
             }
-        }
 
+
+        }
+    }
+}
 

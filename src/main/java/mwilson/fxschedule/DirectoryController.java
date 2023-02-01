@@ -61,26 +61,30 @@ public class DirectoryController implements Initializable {
     public TableColumn<Appointment, String> aColCustomerID;
     public TableColumn<Appointment, String> aColUserID;
     public int userID;
-
+    public static boolean firstLogin;
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
+        firstLogin = true;
 
         DBUsers.getAllUsers().forEach(user -> {
             if (Objects.equals(user.getUserName(), LogInController.userName)){
                 userID = user.getUserID();
             }
         });
-        ObservableList<Appointment> appointmentsSoon = FXCollections.observableArrayList();
-        DBAppointments.getAllAppointments().forEach(appointment -> {
-            if ((appointment.getUserID() == userID) && appointment.getStart().isAfter(LocalDateTime.now()) &&
-                        appointment.getStart().isBefore(LocalDateTime.now().plusMinutes(15))){
+        if (firstLogin) {
+            ObservableList<Appointment> appointmentsSoon = FXCollections.observableArrayList();
+            DBAppointments.getAllAppointments().forEach(appointment -> {
+                if ((appointment.getUserID() == userID) && appointment.getStart().isAfter(LocalDateTime.now()) &&
+                        appointment.getStart().isBefore(LocalDateTime.now().plusMinutes(15))) {
                     appointmentsSoon.add(appointment);
-                    Helper.DisplayInfoAlert("Appointment in the next fifteen minutes","Appointment " + appointment.getAppointmentID() +
+                    Helper.DisplayInfoAlert("Appointment in the next fifteen minutes", "Appointment " + appointment.getAppointmentID() +
                             " begins at " + appointment.getStart().toLocalTime() + " on " + appointment.getStart().toLocalDate() +
                             ".");
+                    firstLogin = false;
+                }
+            });
+            if (appointmentsSoon.isEmpty()) {
+                Helper.DisplayInfoAlert("Alert!", "There are no appointments scheduled in the next fifteen minutes.");
             }
-        });
-        if (appointmentsSoon.isEmpty()){
-            Helper.DisplayInfoAlert("Alert!", "There are no appointments scheduled in the next fifteen minutes.");
         }
 
 

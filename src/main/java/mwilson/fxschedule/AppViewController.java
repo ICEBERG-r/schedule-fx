@@ -1,5 +1,6 @@
 package mwilson.fxschedule;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -43,6 +44,7 @@ public class AppViewController implements Initializable {
     public ComboBox<LocalTime> endTimeBox;
     public ComboBox<Customer> customerBox;
     public ComboBox<User> userBox;
+    public int overlappingAppointments;
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
         contactBox.setItems(DBContacts.getAllContacts());
@@ -113,6 +115,7 @@ public class AppViewController implements Initializable {
         alert.setHeaderText("Are you sure you want to save?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get().equals(ButtonType.OK)){
+            try {
             LocalDateTime start = LocalDateTime.of(datePicker.getValue(),startTimeBox.getValue());
             LocalDateTime end = LocalDateTime.of(datePicker.getValue(), endTimeBox.getValue());
             Instant instantStart = Timestamp.valueOf(start).toInstant();
@@ -122,6 +125,22 @@ public class AppViewController implements Initializable {
             ZonedDateTime endZDT = ZonedDateTime.ofInstant(instantEnd, zoneId);
             ZonedDateTime startEST = startZDT.withZoneSameInstant(ZoneId.of("America/New_York"));
             ZonedDateTime endEST = endZDT.withZoneSameInstant(ZoneId.of("America/New_York"));
+
+            ObservableList<Appointment> customerAppointments = FXCollections.observableArrayList();
+
+            DBAppointments.getAllAppointments().forEach(appointment -> {
+                if (Objects.equals(appointment.getCustomerID(), customerBox.getValue().getCustomerID())){
+                    customerAppointments.add(appointment);
+                }
+            });
+
+            overlappingAppointments = 0;
+            customerAppointments.forEach(appointment -> {
+                if ((start.isAfter(appointment.getStart()) && start.isBefore(appointment.getEnd())) ||
+                        (end.isAfter(appointment.getStart()) && end.isBefore(appointment.getEnd()))){
+                    overlappingAppointments = overlappingAppointments + 1;
+                }
+            });
 
 
             if ((Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SATURDAY)) ||
@@ -133,10 +152,14 @@ public class AppViewController implements Initializable {
                     endEST.toLocalTime().isAfter(LocalTime.of(22,0))){
                 Helper.DisplayInfoAlert("Error!", "Appointments must occur during business hours - " +
                         "8:00 - 22:00 EST");
+            } else if (start.isAfter(end)){
+                Helper.DisplayInfoAlert("Error!", "Meeting must start before it can end.");
+            } else if (overlappingAppointments > 0) {
+                Helper.DisplayInfoAlert("Error!", "Customer has another meeting at this time.");
             } else {
-                DBAppointments.insert(titleField.getText(),descriptionArea.getText(), locationField.getText(),
-                        typeField.getText(), start, end, customerBox.getValue().getCustomerID(), userBox.getValue().getUserID(),
-                        contactBox.getValue().getContactID());
+                DBAppointments.update(selectedAppointment.getAppointmentID(), titleField.getText(),
+                        descriptionArea.getText(), locationField.getText(), typeField.getText(), start, end,
+                        customerBox.getValue().getCustomerID(), userBox.getValue().getUserID(), contactBox.getValue().getContactID());
                 Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
                 Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
                 Scene scene = new Scene(root);
@@ -144,6 +167,12 @@ public class AppViewController implements Initializable {
                 stage.setScene(scene);
                 stage.show();
             }
-        }
+        } catch (SQLException e){
+                Helper.DisplayInfoAlert("Error!", "SQL error!");
+            } catch (IOException e){
+                Helper.DisplayInfoAlert("Error!", "All fields must be filled");
+            }
+    }
+
     }
 }
