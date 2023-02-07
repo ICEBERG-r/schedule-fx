@@ -17,7 +17,7 @@ public class Contact {
     public String getContactName(){
         return contactName;
     }
-    public String getContactEmail(){
+    public String getEmail(){
         return email;
     }
     public String toString(){

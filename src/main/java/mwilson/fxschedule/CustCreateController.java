@@ -13,6 +13,7 @@ import mwilson.fxschedule.DBAccess.DBDivisions;
 import mwilson.fxschedule.Database.DBConnection;
 import mwilson.fxschedule.Model.Country;
 import mwilson.fxschedule.Model.FirstLevelDivision;
+import mwilson.fxschedule.Utilities.Helper;
 
 import java.io.IOException;
 import java.net.URL;
@@ -46,31 +47,36 @@ public class CustCreateController implements Initializable {
         alert.setHeaderText("Are you sure you want to cancel?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get().equals(ButtonType.OK)){
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
-            Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setTitle("Directory");
-            stage.setScene(scene);
-            stage.show();
+                Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
+                Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+                Scene scene = new Scene(root);
+                stage.setTitle("Directory");
+                stage.setScene(scene);
+                stage.show();
+            }
         }
-    }
 
-    //Does not save info yet. Returns to Directory.
+
     public void OnSaveButtonClicked(ActionEvent actionEvent) throws IOException, SQLException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Save");
         alert.setHeaderText("Are you sure you want to save?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get().equals(ButtonType.OK)){
-            int divisionID = divisionCombo.getValue().getDivisionID();
-            DBCustomers.insert(nameField.getText(), addressField.getText(), postalField.getText(), phoneField.getText(),
-                    divisionID);
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
-            Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setTitle("Directory");
-            stage.setScene(scene);
-            stage.show();
+            if (nameField.getText().isEmpty() || addressField.getText().isEmpty() || postalField.getText().isEmpty() ||
+            phoneField.getText().isEmpty() || countryCombo.getValue() == null || divisionCombo.getValue() == null) {
+                Helper.DisplayInfoAlert("Error!", "All fields must be filled");
+            } else {
+                int divisionID = divisionCombo.getValue().getDivisionID();
+                DBCustomers.insert(nameField.getText(), addressField.getText(), postalField.getText(), phoneField.getText(),
+                        divisionID);
+                Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
+                Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+                Scene scene = new Scene(root);
+                stage.setTitle("Directory");
+                stage.setScene(scene);
+                stage.show();
+            }
         }
     }
 

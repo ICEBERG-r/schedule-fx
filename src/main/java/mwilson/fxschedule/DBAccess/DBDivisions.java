@@ -32,38 +32,6 @@ public class DBDivisions {
         return dlist;
     }
 
-    public static String DivisionIDtoDivisionName(int divisionId) throws SQLException {
-        ResultSet rs = null;
-        String divisionName = null;
-        try {
-            String sql = "SELECT Division FROM " + tableName + " WHERE Division_ID = " + divisionId;
-            PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
-            rs = ps.executeQuery();
-            if (rs.next()){
-                divisionName = rs.getString("Division");
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return divisionName;
-    }
-    public static int DivisionIDtoCountryID(int divisionId) throws SQLException {
-        ResultSet rs = null;
-        int countryId = 0;
-        try {
-            String sql = "SELECT Division FROM " + tableName + " WHERE Division_ID = " + divisionId;
-            PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
-            rs = ps.executeQuery();
-            if (rs.next()){
-                countryId = rs.getInt("Country_ID");
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return countryId;
-    }
     public static int GetIDFromDivision(String division){
         int divisionId = 0;
         try {

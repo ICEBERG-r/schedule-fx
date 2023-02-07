@@ -1,7 +1,6 @@
 package mwilson.fxschedule.Model;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 
 public class Appointment {
     private int appointmentID;

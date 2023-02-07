@@ -129,7 +129,8 @@ public class AppViewController implements Initializable {
                 ObservableList<Appointment> customerAppointments = FXCollections.observableArrayList();
 
                 DBAppointments.getAllAppointments().forEach(appointment -> {
-                    if (Objects.equals(appointment.getCustomerID(), customerBox.getValue().getCustomerID())) {
+                    if (Objects.equals(appointment.getCustomerID(), customerBox.getValue().getCustomerID()) &&
+                    !Objects.equals(appointment.getAppointmentID(), selectedAppointment.getAppointmentID())) {
                         customerAppointments.add(appointment);
                     }
                 });

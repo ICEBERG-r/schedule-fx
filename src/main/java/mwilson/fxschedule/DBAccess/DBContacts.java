@@ -8,11 +8,9 @@ import mwilson.fxschedule.Model.Contact;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.PropertyPermission;
 
 public class DBContacts {
 
-    public static String tableName = "contacts";
     public static ObservableList<Contact> getAllContacts(){
         ObservableList<Contact> clist = FXCollections.observableArrayList();
 

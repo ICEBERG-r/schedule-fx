@@ -42,7 +42,7 @@ public class CustViewController implements Initializable {
     }
 
     public void setSelectedCustomer(Customer selectedCustomer){
-        // how to set initial Country and Division?
+
         idField.setText(Integer.toString(selectedCustomer.getCustomerID()));
         nameField.setText(selectedCustomer.getCustomerName());
         addressField.setText(selectedCustomer.getAddress());

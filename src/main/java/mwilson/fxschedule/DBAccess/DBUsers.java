@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import java.sql.*;
 public class DBUsers {
 
-    public static String tableName = "users";
     public static ObservableList<User> getAllUsers(){
         ObservableList<User> ulist = FXCollections.observableArrayList();
 
