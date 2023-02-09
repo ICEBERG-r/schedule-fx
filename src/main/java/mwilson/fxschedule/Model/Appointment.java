@@ -2,6 +2,9 @@ package mwilson.fxschedule.Model;
 
 import java.time.LocalDateTime;
 
+/**
+ * This class contains the model for an appointment object
+ */
 public class Appointment {
     private int appointmentID;
     private String title;

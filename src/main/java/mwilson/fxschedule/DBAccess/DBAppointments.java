@@ -13,7 +13,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contains classes and methods that interact with the "appointments" table in the MySQL database.
+ */
 public class DBAppointments {
+    /**
+     * Defines an object to be used when running the "Appointments by Month and Type" report.
+     *
+     */
     public static class AppointmentByMonthType{
         String month;
         String type;
@@ -29,6 +36,10 @@ public class DBAppointments {
             return month + "   " + type + "    " + count;
         }
     }
+
+    /**
+     * Defines an object to be used when running the "Appointment by Contact" report.
+     */
     public static class AppointmentByContact{
         String contact;
         int appointmentId;
@@ -64,6 +75,10 @@ public class DBAppointments {
                     start + "  End:" + end + "  Customer ID:" + customerId;
         }
     }
+
+    /**
+     * Defines an object to be used with the "Appointment Count by User" report.
+     */
     public static class AppointmentCountByUser{
         String user;
         int count;
@@ -77,12 +92,19 @@ public class DBAppointments {
         }
     }
 
-
+    /**
+     * An array that holds each month as a string value.
+     */
     private static final String[] MONTHS_INDEX = {
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
     };
 
+    /**
+     * Returns an ObservableList of all appointments in the MySQL database.
+     * Converts the timestamp value to a LocalDateTime object.
+     * @return an ObservableList of all Appointments in the MySQL database.
+     */
     public static ObservableList<Appointment> getAllAppointments(){
         ObservableList<Appointment> alist = FXCollections.observableArrayList();
 
@@ -125,6 +147,19 @@ public class DBAppointments {
 
     }
 
+    /**
+     * Inserts a new appointment into the MySQL Database
+     * @param title the title of the appointment
+     * @param description a description of the appointment
+     * @param location the location in which the appointment will take place
+     * @param type the type of appointment
+     * @param start the start date and time of the appointment
+     * @param end the end date and time of the appointment
+     * @param customerID the customer ID of the customer related to the appointment
+     * @param userID the user ID of the user related to the appointment
+     * @param contactID the contact ID of the contact related to the appointment
+     * @throws SQLException if the appointment is unable to be inserted due to an SQL error
+     */
     public static void insert(String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, int customerID, int userID, int contactID) throws SQLException {
         String sql = "INSERT INTO appointments (Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) " +
                 "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -140,6 +175,21 @@ public class DBAppointments {
         ps.setInt(9, contactID);
         ps.executeUpdate();
     }
+
+    /**
+     * Updates the values of an existing appointment in the MySQL database.
+     * @param appointmentID the ID of the appointment being updated
+     * @param title the title of the appointment
+     * @param description a description of the appointment
+     * @param location the location in which the appointment will take place
+     * @param type the type of appointment
+     * @param start the start date and time of the appointment
+     * @param end the end date and time of the appointment
+     * @param customerID the customer ID of the customer related to the appointment
+     * @param userID the user ID of the user related to the appointment
+     * @param contactID the contact ID of the contact related to the appointment
+     * @throws SQLException if the appointment is unable to be updated due to an SQL error
+     */
     public static void update(int appointmentID, String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, int customerID, int userID, int contactID) throws SQLException {
         String sql = """
                 UPDATE appointments\s
@@ -166,6 +216,12 @@ public class DBAppointments {
         ps.setInt(10, appointmentID);
         ps.executeUpdate();
     }
+
+    /**
+     *
+     * @param appointmentID the ID of the appointment being deleted
+     * @throws SQLException if the appointment is unable to be deleted due to an SQL error
+     */
     public static void delete(int appointmentID) throws SQLException {
         String sql = "DELETE FROM appointments WHERE Appointment_ID = ?";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
@@ -173,6 +229,10 @@ public class DBAppointments {
         ps.executeUpdate();
     }
 
+    /**
+     * Returns a List of appointments sorted by month and type along with the count
+     * @return a List of appointments sorted by month and type along with the count
+     */
     public static List<AppointmentByMonthType> getAppointmentsByMonthAndType(){
         var alist = new ArrayList<AppointmentByMonthType>();
 
@@ -198,6 +258,10 @@ public class DBAppointments {
         return alist;
     }
 
+    /**
+     * Returns a schedule of appointments for each contact
+     * @return a List of appointments sorted by contact
+     */
     public static List<AppointmentByContact> getAppointmentsByContact(){
         ArrayList<AppointmentByContact> alist = new ArrayList<>();
 
@@ -228,6 +292,11 @@ public class DBAppointments {
 
         return alist;
     }
+
+    /**
+     * Returns a list of usernames and the number of appointments associated with that user
+     * @return a List of usernames and the number of appointments associated with that user
+     */
     public static List<AppointmentCountByUser> getAppointmentCountByUser(){
         ArrayList<AppointmentCountByUser> alist = new ArrayList<>();
 

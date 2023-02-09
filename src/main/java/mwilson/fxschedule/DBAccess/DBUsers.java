@@ -6,8 +6,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
-public class DBUsers {
 
+/**
+ * This class contains methods that interact with the users table in the MySQL database.
+ */
+public class DBUsers {
+    /**
+     * Returns an ObservableList of all users in the database
+     * @return an ObservableList of all users in the database
+     */
     public static ObservableList<User> getAllUsers(){
         ObservableList<User> ulist = FXCollections.observableArrayList();
 

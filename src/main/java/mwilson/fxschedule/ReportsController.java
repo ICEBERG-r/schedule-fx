@@ -28,6 +28,9 @@ public class ReportsController implements Initializable {
         reportSelectionBox.getItems().add("Appointment Count by User");
     }
 
+    /**
+     * Returns the user to the Directory scene
+     */
     public void onExitClicked(ActionEvent actionEvent) throws IOException {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
             Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
@@ -37,6 +40,9 @@ public class ReportsController implements Initializable {
             stage.show();
     }
 
+    /**
+     * Generates a report based on the selected description in the adjacent combo box.
+     */
     public void onGenerateClicked(ActionEvent actionEvent) {
         if (Objects.equals(reportSelectionBox.getSelectionModel().getSelectedItem(), "Appointments by type and month")) {
             StringBuilder output = new StringBuilder();

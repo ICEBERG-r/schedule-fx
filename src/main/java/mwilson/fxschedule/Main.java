@@ -20,6 +20,11 @@ public class Main extends Application {
         stage.show();
     }
 
+    /**
+     * The entrance point of the application.
+     * Starts the connection with the MySQL database and launches the application.
+     * Terminates the connection upon the program's exit.
+     */
     public static void main(String[] args) {
         DBConnection.startConnection();
         launch();

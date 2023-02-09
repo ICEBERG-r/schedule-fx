@@ -1,5 +1,8 @@
 package mwilson.fxschedule.Model;
 
+/**
+ * This class contains the model for a User object
+ */
 public class User{
     private int userID;
     private String username;

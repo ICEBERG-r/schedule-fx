@@ -1,5 +1,8 @@
 package mwilson.fxschedule.Model;
 
+/**
+ * This class contains the model for a FirstLevelDivision object
+ */
 public class FirstLevelDivision {
     private int divisionID;
     private String division;

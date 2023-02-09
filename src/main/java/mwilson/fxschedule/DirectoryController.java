@@ -60,59 +60,18 @@ public class DirectoryController implements Initializable {
     public TableColumn<Appointment, String> aColUserID;
     public int userID;
 
+    /**
+     *
+     */
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
-
-
-        DBUsers.getAllUsers().forEach(user -> {
-            if (Objects.equals(user.getUserName(), LogInController.userName)){
-                userID = user.getUserID();
-            }
-        });
-        if (LogInController.firstLogin) {
-            ObservableList<Appointment> appointmentsSoon = FXCollections.observableArrayList();
-            DBAppointments.getAllAppointments().forEach(appointment -> {
-                if ((appointment.getUserID() == userID) && appointment.getStart().isAfter(LocalDateTime.now()) &&
-                        appointment.getStart().isBefore(LocalDateTime.now().plusMinutes(15))) {
-                    appointmentsSoon.add(appointment);
-                    Helper.DisplayInfoAlert("Appointment in the next fifteen minutes", "Appointment " + appointment.getAppointmentID() +
-                            " begins at " + appointment.getStart().toLocalTime() + " on " + appointment.getStart().toLocalDate() +
-                            ".");
-
-                }
-            });
-            if (appointmentsSoon.isEmpty()) {
-                Helper.DisplayInfoAlert("Alert!", "There are no appointments scheduled in the next fifteen minutes.");
-            }
-        }
-
-        LogInController.firstLogin = false;
-
-
-        cColCustomerID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
-        cColCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-        cColAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
-        cColPostalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
-        cColPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        cColDivision.setCellValueFactory(new PropertyValueFactory<>("division"));
-        cColCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
-
-        aColAppointmentID.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
-        aColTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
-        aColDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-        aColLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
-        aColType.setCellValueFactory(new PropertyValueFactory<>("type"));
-        aColStart.setCellValueFactory(new PropertyValueFactory<>("start"));
-        aColEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
-        aColContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
-        aColCustomerID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
-        aColUserID.setCellValueFactory(new PropertyValueFactory<>("userID"));
-
-        customerTable.setItems(DBCustomers.getAllCustomers());
-        appointmentTable.setItems(DBAppointments.getAllAppointments());
-
-
+        setUserID();
+        checkForAppointmentsWithinFifteenMinutes();
+        initializeTables();
     }
 
+    /**
+     * Navigates to the Customer Creation scene when the New button is clicked.
+     */
     public void OnNewCustomerButtonClicked(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("CustomerCreate.fxml")));
         Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
@@ -122,16 +81,26 @@ public class DirectoryController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Navigates to the Customer View scene when the View/Edit button is clicked.
+     */
     public void OnViewCustomerButtonClicked(ActionEvent actionEvent) throws IOException {
-        CustomerViewController.selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("CustomerView.fxml")));
-        Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setTitle("Directory");
-        stage.setScene(scene);
-        stage.show();
+        if(!customerTable.getSelectionModel().isEmpty()) {
+            CustomerViewController.selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("CustomerView.fxml")));
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setTitle("Directory");
+            stage.setScene(scene);
+            stage.show();
+        } else {
+            Helper.DisplayInfoAlert("No customer selected", "A customer must be selected from the table");
+        }
     }
 
+    /**
+     * Navigates to the Appointment Creation scene when the new button is clicked.
+     */
     public void OnNewAppointmentButtonClicked(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("AppointmentCreate.fxml")));
         Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
@@ -141,9 +110,12 @@ public class DirectoryController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Navigates to the Appointment View scene when the view/edit button is clicked.
+     */
     public void OnViewAppointmentButtonClicked(ActionEvent actionEvent) throws IOException {
         if (!appointmentTable.getSelectionModel().isEmpty()) {
-            AppViewController.selectedAppointment = appointmentTable.getSelectionModel().getSelectedItem();
+            AppointmentViewController.selectedAppointment = appointmentTable.getSelectionModel().getSelectedItem();
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("AppointmentView.fxml")));
             Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
@@ -155,13 +127,16 @@ public class DirectoryController implements Initializable {
         }
     }
 
+    /**
+     * Displays the exit program prompt when the exit button is clicked.
+     */
     public void OnExitButtonClicked(ActionEvent actionEvent) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Exit");
-        alert.setHeaderText("Are you sure you want to exit?");
         Helper.ExitProgramPrompt();
     }
 
+    /**
+     * Removes the selected customer from the database and the table
+     */
     public void OnDeleteCustomerButtonClicked(ActionEvent actionEvent) {
         if (!customerTable.getSelectionModel().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -186,6 +161,9 @@ public class DirectoryController implements Initializable {
         }
     }
 
+    /**
+     * Deletes the selected appointment from the database and the table.
+     */
     public void OnDeleteAppointmentButtonClicked(ActionEvent actionEvent) {
         if (!appointmentTable.getSelectionModel().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -212,6 +190,9 @@ public class DirectoryController implements Initializable {
         }
     }
 
+    /**
+     * Navigates to the Reports scene
+     */
     public void OnReportsClicked(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Reports.fxml")));
         Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
@@ -221,10 +202,16 @@ public class DirectoryController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Displays all appointments in the table when the All radio button is selected.
+     */
     public void onAllAppointmentsSelected(ActionEvent actionEvent) {
         appointmentTable.setItems(DBAppointments.getAllAppointments());
     }
 
+    /**
+     * Displays all appointments within the next week when the This Week radio button is selected
+     */
     public void OnThisWeekSelected(ActionEvent actionEvent) {
         ObservableList<Appointment> all = DBAppointments.getAllAppointments();
         ObservableList<Appointment> thisWeek = FXCollections.observableArrayList();
@@ -238,6 +225,9 @@ public class DirectoryController implements Initializable {
         appointmentTable.setItems(thisWeek);
     }
 
+    /**
+     * Displays all appointments within the next month when the This Month radio button is selected
+     */
     public void OnThisMonthSelected(ActionEvent actionEvent) {
         ObservableList<Appointment> all = DBAppointments.getAllAppointments();
         ObservableList<Appointment> thisMonth = FXCollections.observableArrayList();
@@ -250,5 +240,69 @@ public class DirectoryController implements Initializable {
         });
 
         appointmentTable.setItems(thisMonth);
+    }
+
+    /**
+     * Gets the user ID from the username used to log in to the program.
+     */
+    void setUserID(){
+        DBUsers.getAllUsers().forEach(user -> {
+            if (Objects.equals(user.getUserName(), LogInController.userName)){
+                userID = user.getUserID();
+            }
+        });
+    }
+
+    /**
+     * Uses the User ID to check for appointments within the next fifteen minutes.
+     * Uses the value of a boolean flag to ensure that this only runs once, after the initial login.
+     * Sets the firstLogin to false after checking for appointments.
+     * LAMBDA COMMENTS
+     */
+    void checkForAppointmentsWithinFifteenMinutes(){
+        if (LogInController.firstLogin) {
+            ObservableList<Appointment> appointmentsSoon = FXCollections.observableArrayList();
+            DBAppointments.getAllAppointments().forEach(appointment -> {
+                if ((appointment.getUserID() == userID) && appointment.getStart().isAfter(LocalDateTime.now()) &&
+                        appointment.getStart().isBefore(LocalDateTime.now().plusMinutes(15))) {
+                    appointmentsSoon.add(appointment);
+                    Helper.DisplayInfoAlert("Appointment in the next fifteen minutes", "Appointment " + appointment.getAppointmentID() +
+                            " begins at " + appointment.getStart().toLocalTime() + " on " + appointment.getStart().toLocalDate() +
+                            ".");
+
+                }
+            });
+            if (appointmentsSoon.isEmpty()) {
+                Helper.DisplayInfoAlert("Alert!", "There are no appointments scheduled in the next fifteen minutes.");
+            }
+        }
+        LogInController.firstLogin = false;
+    }
+
+    /**
+     * Creates and sets the values in the Customer table and the Appointment table
+     */
+    void initializeTables(){
+        cColCustomerID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        cColCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        cColAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        cColPostalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+        cColPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        cColDivision.setCellValueFactory(new PropertyValueFactory<>("division"));
+        cColCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
+
+        aColAppointmentID.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+        aColTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        aColDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        aColLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
+        aColType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        aColStart.setCellValueFactory(new PropertyValueFactory<>("start"));
+        aColEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
+        aColContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        aColCustomerID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        aColUserID.setCellValueFactory(new PropertyValueFactory<>("userID"));
+
+        customerTable.setItems(DBCustomers.getAllCustomers());
+        appointmentTable.setItems(DBAppointments.getAllAppointments());
     }
 }

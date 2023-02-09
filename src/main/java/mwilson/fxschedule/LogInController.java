@@ -50,6 +50,9 @@ public class LogInController implements Initializable {
         }
     }
 
+    /**
+     * Checks for locale and displays the proper exit prompt.
+     */
     public void OnExitClicked(ActionEvent actionEvent) {
 
         if (Locale.getDefault().toString().equals("fr_FR")){
@@ -60,6 +63,10 @@ public class LogInController implements Initializable {
         }
     }
 
+    /**
+     * Logs the login attempt and verifies that the username and password are correct.
+     * Upon entering a correct username and password combination, navigates to the Directory scene.
+     */
     public void OnLoginButtonClicked(ActionEvent actionEvent) {
         Logger log = Logger.getLogger("login_activity.txt");
 

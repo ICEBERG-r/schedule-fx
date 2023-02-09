@@ -6,8 +6,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
-public class DBCountries {
 
+/**
+ * This class contains methods that interact with the countries table in the MySQL database.
+ */
+public class DBCountries {
+    /**
+     * Returns an ObservableList of all countries in the MySQL database
+     * @return an ObservableList of all countries in the MySQL database
+     */
     public static ObservableList<Country> getAllCountries(){
         ObservableList<Country> clist = FXCollections.observableArrayList();
 

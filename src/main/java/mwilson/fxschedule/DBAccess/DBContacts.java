@@ -9,8 +9,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This class contains methods that interact with the contacts table in the MySQL database.
+ */
 public class DBContacts {
-
+    /**
+     * Returns an ObservableList of all the contacts that are in the database.
+     * @return ObservableList of all Contacts
+     */
     public static ObservableList<Contact> getAllContacts(){
         ObservableList<Contact> clist = FXCollections.observableArrayList();
 

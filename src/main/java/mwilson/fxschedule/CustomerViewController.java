@@ -40,6 +40,11 @@ public class CustomerViewController implements Initializable {
         setSelectedCustomer(selectedCustomer);
     }
 
+    /**
+     * Sets the input boxes with the information from the Customer that was selected on the Directory scene
+     * LAMBDA COMMENTS
+     * @param selectedCustomer the Customer that was selected on the Directory scene
+     */
     public void setSelectedCustomer(Customer selectedCustomer){
 
         idField.setText(Integer.toString(selectedCustomer.getCustomerID()));
@@ -63,6 +68,11 @@ public class CustomerViewController implements Initializable {
             }
         });
     }
+    /**
+     * When the cancel button is clicked, an alert appears to confirm cancellation of the customer update process.
+     * If the user selects OK, the program navigates back to the Directory scene.
+     * LAMBDA COMMENTS
+     */
     public void OnCancelButtonClicked(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Cancel");
@@ -83,7 +93,11 @@ public class CustomerViewController implements Initializable {
             }
         }));
     }
-
+    /**
+     * When the save button is clicked, an alert appears to confirm saving the customer.
+     * If OK is clicked, the customer is updated in the database and the program navigates back to the
+     * Directory scene.
+     */
     public void OnSaveButtonClicked(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Save");
@@ -107,6 +121,9 @@ public class CustomerViewController implements Initializable {
         }));
 
     }
+    /**
+     * Filters the contents of the division box based on the country that was selected by the user in the country box.
+     */
     public void OnCountrySelected(ActionEvent event){
         divisionCombo.valueProperty().set(null);
         divisionCombo.getItems().removeAll(divisionCombo.getItems());

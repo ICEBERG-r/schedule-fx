@@ -27,7 +27,7 @@ import java.time.*;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class AppViewController implements Initializable {
+public class AppointmentCreateController implements Initializable {
     public Button cancelButton;
     public Button saveButton;
     public TextField idField;
@@ -36,8 +36,6 @@ public class AppViewController implements Initializable {
     public TextField typeField;
     public TextArea descriptionArea;
     public ComboBox<Contact> contactBox;
-
-    public static Appointment selectedAppointment;
     public DatePicker datePicker;
     public ComboBox<LocalTime> startTimeBox;
     public ComboBox<LocalTime> endTimeBox;
@@ -45,54 +43,32 @@ public class AppViewController implements Initializable {
     public ComboBox<User> userBox;
     public int overlappingAppointments;
 
+
     public void initialize(URL url, ResourceBundle resourceBundle) {
         contactBox.setItems(DBContacts.getAllContacts());
-        LocalTime start = LocalTime.of(0,0);
-        LocalTime end = LocalTime.of(23,45);
+        customerBox.setItems(DBCustomers.getAllCustomers());
+        userBox.setItems(DBUsers.getAllUsers());
 
-        while (!start.equals(end)){
-            startTimeBox.getItems().add(start);
-            endTimeBox.getItems().add(start);
-            start = start.plusMinutes(15);
+        LocalTime startTime = LocalTime.of(0, 0);
+        LocalTime endTime = LocalTime.of(23, 45);
+
+        while (!startTime.equals(endTime)) {
+            startTimeBox.getItems().add(startTime);
+            endTimeBox.getItems().add(startTime);
+            startTime = startTime.plusMinutes(15);
         }
 
-        startTimeBox.getItems().add(LocalTime.of(23,45));
-        endTimeBox.getItems().add(LocalTime.of(23,45));
+        startTimeBox.getItems().add(LocalTime.of(23, 45));
+        endTimeBox.getItems().add(LocalTime.of(23, 45));
 
-        setSelectedAppointment();
+
     }
 
-    public void setSelectedAppointment(){
-        ObservableList<Contact> contactList = DBContacts.getAllContacts();
-        ObservableList<Customer> customerList = DBCustomers.getAllCustomers();
-        ObservableList<User> userList = DBUsers.getAllUsers();
-        contactBox.setItems(contactList);
-        customerBox.setItems(customerList);
-        userBox.setItems(userList);
-        contactList.forEach(contact -> {
-            if(Objects.equals(contact.toString(), selectedAppointment.getContact())){
-                contactBox.setValue(contact);
-            }
-        });
-        customerList.forEach(customer -> {
-            if(Objects.equals(customer.getCustomerID(), selectedAppointment.getCustomerID())){
-                customerBox.setValue(customer);
-            }
-        });
-        userList.forEach(user -> {
-            if(Objects.equals(user.getUserID(), selectedAppointment.getUserID())){
-                userBox.setValue(user);
-            }
-        });
-        idField.setText(Integer.toString(selectedAppointment.getAppointmentID()));
-        titleField.setText(selectedAppointment.getTitle());
-        locationField.setText(selectedAppointment.getLocation());
-        typeField.setText(selectedAppointment.getType());
-        descriptionArea.setText(selectedAppointment.getDescription());
-        startTimeBox.setValue(selectedAppointment.getStart().toLocalTime());
-        endTimeBox.setValue(selectedAppointment.getEnd().toLocalTime());
-        datePicker.setValue(selectedAppointment.getStart().toLocalDate());
-    }
+    /**
+     * When the cancel button is clicked, an alert appears to confirm cancellation of the appointment creation.
+     * If the user selects OK, the program navigates back to the Directory scene.
+     * LAMBDA COMMENTS
+     */
     public void OnCancelButtonClicked(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Cancel");
@@ -114,11 +90,16 @@ public class AppViewController implements Initializable {
         }));
     }
 
+    /**
+     * When the save button is clicked, an alert appears to confirm saving the appointment.
+     * If OK is clicked, the appointment is added to the database and the program navigates back to the
+     * Directory scene.
+     */
     public void OnSaveButtonClicked(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Save");
         alert.setHeaderText("Are you sure you want to save?");
-        alert.showAndWait().ifPresent(( response -> {
+        alert.showAndWait().ifPresent((response -> {
             if (response == ButtonType.OK){
                 try {
                     LocalDateTime start = LocalDateTime.of(datePicker.getValue(), startTimeBox.getValue());
@@ -134,8 +115,7 @@ public class AppViewController implements Initializable {
                     ObservableList<Appointment> customerAppointments = FXCollections.observableArrayList();
 
                     DBAppointments.getAllAppointments().forEach(appointment -> {
-                        if (Objects.equals(appointment.getCustomerID(), customerBox.getValue().getCustomerID()) &&
-                                !Objects.equals(appointment.getAppointmentID(), selectedAppointment.getAppointmentID())) {
+                        if (Objects.equals(appointment.getCustomerID(), customerBox.getValue().getCustomerID())) {
                             customerAppointments.add(appointment);
                         }
                     });
@@ -150,40 +130,40 @@ public class AppViewController implements Initializable {
 
                     if (typeField.getText().isEmpty() || descriptionArea.getText().isEmpty() || locationField.getText().isEmpty()
                             || typeField.getText().isEmpty() || customerBox.getValue() == null || userBox.getValue() == null ||
-                            contactBox.getValue() == null){
-                        Helper.DisplayInfoAlert("Error!", "All fields must be filled");
+                            contactBox.getValue() == null) {
+                        Helper.DisplayInfoAlert("Error!","All fields must be filled.");
                     } else if ((Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SATURDAY)) ||
-                            (Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SUNDAY))){
+                            (Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SUNDAY))) {
                         Helper.DisplayInfoAlert("Error!", "Appointments can only be " +
                                 "scheduled on Monday through Friday.");
-                    }
-                    else if (startEST.toLocalTime().isBefore(LocalTime.of(8,0)) ||
-                            endEST.toLocalTime().isAfter(LocalTime.of(22,0))){
+                    } else if (startEST.toLocalTime().isBefore(LocalTime.of(8, 0)) ||
+                            endEST.toLocalTime().isAfter(LocalTime.of(22, 0))) {
                         Helper.DisplayInfoAlert("Error!", "Appointments must occur during business hours - " +
                                 "8:00 - 22:00 EST");
-                    } else if (start.isAfter(end)){
+                    } else if (start.isAfter(end)) {
                         Helper.DisplayInfoAlert("Error!", "Meeting must start before it can end.");
                     } else if (overlappingAppointments > 0) {
                         Helper.DisplayInfoAlert("Error!", "Customer has another meeting at this time.");
                     } else {
-                        DBAppointments.update(selectedAppointment.getAppointmentID(), titleField.getText(),
-                                descriptionArea.getText(), locationField.getText(), typeField.getText(), start, end,
-                                customerBox.getValue().getCustomerID(), userBox.getValue().getUserID(), contactBox.getValue().getContactID());
+
+                        DBAppointments.insert(titleField.getText(), descriptionArea.getText(), locationField.getText(),
+                                typeField.getText(), start, end, customerBox.getValue().getCustomerID(), userBox.getValue().getUserID(),
+                                contactBox.getValue().getContactID());
                         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
-                        Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
+                        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
                         Scene scene = new Scene(root);
                         stage.setTitle("Directory");
                         stage.setScene(scene);
                         stage.show();
+
                     }
-                } catch (SQLException e){
-                    Helper.DisplayInfoAlert("Error!", "SQL error!");
-                } catch (Exception e){
-                    Helper.DisplayInfoAlert("Error!", "All fields must be filled");
+                } catch (SQLException e) {
+                    Helper.DisplayInfoAlert("Error!", "SQL Error!");
+                } catch (Exception e) {
+                    Helper.DisplayInfoAlert("Error!", "All fields must be filled.");
                 }
             }
-        }
-
-                ));
+        }));
     }
 }
+

@@ -6,9 +6,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+
+/**
+ * This class contains methods that interact with the first_level_divisions table in the MySQL database.
+ */
 public class DBDivisions {
 
     public static String tableName = "first_level_divisions";
+
+    /**
+     * Returns an ObservableList of all first level divisions in the database
+     * @return an ObservableList of all first level divisions in the database
+     */
     public static ObservableList<FirstLevelDivision> getAllDivisions(){
         ObservableList<FirstLevelDivision> dlist = FXCollections.observableArrayList();
 
@@ -32,6 +41,11 @@ public class DBDivisions {
         return dlist;
     }
 
+    /**
+     * Takes the name of a division and returns the ID
+     * @param division the name of a first level division
+     * @return the ID of the division
+     */
     public static int GetIDFromDivision(String division){
         int divisionId = 0;
         try {

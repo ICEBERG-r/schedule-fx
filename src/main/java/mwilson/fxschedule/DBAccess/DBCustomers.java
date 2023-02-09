@@ -6,9 +6,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+
+/**
+ * This class contains methods that interact with the customers table in the MySQL database.
+ */
 public class DBCustomers {
-
-
+    /**
+     * Returns an ObservableList of all Customers in the MySQL database
+     * @return an ObservableList of all Customers in the MySQL database
+     */
     public static ObservableList<Customer> getAllCustomers(){
         ObservableList<Customer> clist = FXCollections.observableArrayList();
 
@@ -41,6 +47,15 @@ public class DBCustomers {
         return clist;
     }
 
+    /**
+     * Inserts a new customer into the MySQL database.
+     * @param name the name of the customer
+     * @param address the address of the customer. Does not include postal code, division, or country information
+     * @param postalCode the postal code of the customer
+     * @param phone the customer's phone number
+     * @param divisionID the ID of the division in which the customer is located
+     * @throws SQLException if the customer is unable to be inserted due to an SQL error
+     */
     public static void insert(String name, String address, String postalCode, String phone, int divisionID) throws SQLException {
         String sql = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, Division_ID) VALUES(?, ?, ?, ?, ?)";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
@@ -52,6 +67,16 @@ public class DBCustomers {
         ps.executeUpdate();
     }
 
+    /**
+     * Updates the values for an existing customer in the database
+     * @param customerID the ID associated with the customer
+     * @param name the name of the customer
+     * @param address the address of the customer. Does not include postal code, division, or country information
+     * @param postalCode the postal code of the customer
+     * @param phone the customer's phone number
+     * @param divisionID the ID of the division in which the customer is located
+     * @throws SQLException if the customer is unable to be updated due to an SQL error
+     */
     public static void update(int customerID, String name, String address, String postalCode, String phone, int divisionID) throws SQLException {
         String sql = """
                 UPDATE customers\s
@@ -71,6 +96,12 @@ public class DBCustomers {
         ps.executeUpdate();
     }
 
+    /**
+     * Deletes an existing customer from the database. Also deletes all associated appointments in order to avoid
+     * Foreign key errors.
+     * @param customerID the ID associated with the customer
+     * @throws SQLException if the customer is unable to be deleted due to an SQL error
+     */
     public static void delete(int customerID) throws SQLException {
         String sql = "DELETE FROM appointments WHERE Customer_ID = ?";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);

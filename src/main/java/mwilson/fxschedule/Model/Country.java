@@ -1,6 +1,8 @@
 package mwilson.fxschedule.Model;
 
-
+/**
+ * This class contains the model for a country object
+ */
 public class Country {
     private final int countryID;
     private final String country;

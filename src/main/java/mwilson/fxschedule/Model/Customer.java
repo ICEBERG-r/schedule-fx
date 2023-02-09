@@ -1,5 +1,8 @@
 package mwilson.fxschedule.Model;
 
+/**
+ * This class contains the model for a customer object.
+ */
 public class Customer {
 
     private int customerID;
