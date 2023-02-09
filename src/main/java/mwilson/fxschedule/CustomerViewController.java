@@ -22,10 +22,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class CustViewController implements Initializable {
+public class CustomerViewController implements Initializable {
     public static Customer selectedCustomer;
     public Button cancelButton;
     public Button saveButton;
@@ -64,37 +63,49 @@ public class CustViewController implements Initializable {
             }
         });
     }
-    public void OnCancelButtonClicked(ActionEvent actionEvent) throws IOException {
+    public void OnCancelButtonClicked(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Cancel");
         alert.setHeaderText("Are you sure you want to cancel?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get().equals(ButtonType.OK)){
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
-            Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setTitle("Directory");
-            stage.setScene(scene);
-            stage.show();
-        }
+        alert.showAndWait().ifPresent(( response -> {
+            if (response == ButtonType.OK){
+                try {
+                    Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
+                    Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+                    Scene scene = new Scene(root);
+                    stage.setTitle("Directory");
+                    stage.setScene(scene);
+                    stage.show();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }));
     }
 
-    public void OnSaveButtonClicked(ActionEvent actionEvent) throws IOException, SQLException {
+    public void OnSaveButtonClicked(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Save");
         alert.setHeaderText("Are you sure you want to save?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get().equals(ButtonType.OK)){
-            int divisionID = DBDivisions.GetIDFromDivision(divisionCombo.getValue().toString());
-            DBCustomers.update(selectedCustomer.getCustomerID(), nameField.getText(), addressField.getText(),
-                    postalField.getText(),phoneField.getText(),divisionID);
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
-            Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setTitle("Directory");
-            stage.setScene(scene);
-            stage.show();
-        }
+        alert.showAndWait().ifPresent(( response -> {
+            if (response == ButtonType.OK){
+                try {
+                    int divisionID = DBDivisions.GetIDFromDivision(divisionCombo.getValue().toString());
+                    DBCustomers.update(selectedCustomer.getCustomerID(), nameField.getText(), addressField.getText(),
+                            postalField.getText(),phoneField.getText(),divisionID);
+                    Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
+                    Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
+                    Scene scene = new Scene(root);
+                    stage.setTitle("Directory");
+                    stage.setScene(scene);
+                    stage.show();
+                } catch (IOException | SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }));
+
     }
     public void OnCountrySelected(ActionEvent event){
         divisionCombo.valueProperty().set(null);

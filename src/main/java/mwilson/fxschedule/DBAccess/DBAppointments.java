@@ -25,10 +25,6 @@ public class DBAppointments {
             this.count = count;
         }
 
-        public String getMonth(){ return month;}
-        public String getType() { return type; }
-        public int getCount() { return count; }
-        public void setMonth(String month) { this.month = month; }
         public String toString(){
             return month + "   " + type + "    " + count;
         }
@@ -58,30 +54,26 @@ public class DBAppointments {
         public String getContact(){
             return contact;
         }
-        public int getAppointmentId(){
-            return appointmentId;
-        }
-        public String getTitle(){
-            return title;
-        }
-        public String getType(){
-            return type;
-        }
-        public String getDescription(){
-            return description;
-        }
+
         public LocalDateTime getStart(){
             return start;
         }
-        public LocalDateTime getEnd(){
-            return end;
-        }
-        public int getCustomerId(){
-            return customerId;
-        }
+
         public String toString(){
             return contact + "  Appointment ID:" + appointmentId + "  " + title + "  " + type + "  " + description + "  Start:" +
                     start + "  End:" + end + "  Customer ID:" + customerId;
+        }
+    }
+    public static class AppointmentCountByUser{
+        String user;
+        int count;
+        AppointmentCountByUser(String user, int count){
+            this.user = user;
+            this.count = count;
+        }
+
+        public String toString(){
+            return user + " " + count;
         }
     }
 
@@ -129,9 +121,11 @@ public class DBAppointments {
         }
 
         return alist;
+
+
     }
 
-    public static int insert(String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, int customerID, int userID, int contactID) throws SQLException {
+    public static void insert(String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, int customerID, int userID, int contactID) throws SQLException {
         String sql = "INSERT INTO appointments (Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) " +
                 "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
@@ -144,11 +138,21 @@ public class DBAppointments {
         ps.setInt(7, customerID);
         ps.setInt(8, userID);
         ps.setInt(9, contactID);
-        return ps.executeUpdate();
+        ps.executeUpdate();
     }
-    public static int update(int appointmentID, String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, int customerID, int userID, int contactID) throws SQLException {
-        String sql = "UPDATE appointments \nSET Title = ?, \nDescription = ?, \nLocation = ?, \nType = ?, \nStart = ?, \nEnd = ?, " +
-                "\nCustomer_ID = ?, \nUser_ID = ?, \nContact_ID = ? \nWHERE Appointment_ID = ?";
+    public static void update(int appointmentID, String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, int customerID, int userID, int contactID) throws SQLException {
+        String sql = """
+                UPDATE appointments\s
+                SET Title = ?,\s
+                Description = ?,\s
+                Location = ?,\s
+                Type = ?,\s
+                Start = ?,\s
+                End = ?,\s
+                Customer_ID = ?,\s
+                User_ID = ?,\s
+                Contact_ID = ?\s
+                WHERE Appointment_ID = ?""";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
         ps.setString(1, title);
         ps.setString(2, description);
@@ -160,22 +164,23 @@ public class DBAppointments {
         ps.setInt(8, userID);
         ps.setInt(9, contactID);
         ps.setInt(10, appointmentID);
-        return ps.executeUpdate();
+        ps.executeUpdate();
     }
-    public static int delete(int appointmentID) throws SQLException {
+    public static void delete(int appointmentID) throws SQLException {
         String sql = "DELETE FROM appointments WHERE Appointment_ID = ?";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
         ps.setInt(1, appointmentID);
-        return ps.executeUpdate();
+        ps.executeUpdate();
     }
 
     public static List<AppointmentByMonthType> getAppointmentsByMonthAndType(){
         var alist = new ArrayList<AppointmentByMonthType>();
 
         try {
-            String sql = "SELECT MONTH(Start) AS Month, Type, COUNT(*) as Count FROM appointments\n" +
-                    "GROUP BY Month, Type\n" +
-                    "ORDER BY Month, Type";
+            String sql = """
+                    SELECT MONTH(Start) AS Month, Type, COUNT(*) as Count FROM appointments
+                    GROUP BY Month, Type
+                    ORDER BY Month, Type""";
 
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
 
@@ -194,12 +199,13 @@ public class DBAppointments {
     }
 
     public static List<AppointmentByContact> getAppointmentsByContact(){
-        var alist = new ArrayList<AppointmentByContact>();
+        ArrayList<AppointmentByContact> alist = new ArrayList<>();
 
         try {
-            String sql = "SELECT * FROM appointments\n" +
-                    "NATURAL JOIN contacts\n" +
-                    "ORDER BY Contact_Name";
+            String sql = """
+                    SELECT * FROM appointments
+                    NATURAL JOIN contacts
+                    ORDER BY Contact_Name""";
 
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
 
@@ -214,6 +220,30 @@ public class DBAppointments {
                         rs.getTimestamp("Start").toLocalDateTime(),
                         rs.getTimestamp("End").toLocalDateTime(),
                         rs.getInt("Customer_ID")));
+
+            }
+        } catch (SQLException throwables){
+            throwables.printStackTrace();
+        }
+
+        return alist;
+    }
+    public static List<AppointmentCountByUser> getAppointmentCountByUser(){
+        ArrayList<AppointmentCountByUser> alist = new ArrayList<>();
+
+        try {
+            String sql = """
+                    SELECT u.User_Name, COUNT(*) as Count FROM appointments a
+                    JOIN users u on a.User_ID = u.User_ID
+                    GROUP BY User_Name
+                    ORDER BY User_Name""";
+
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                alist.add(new AppointmentCountByUser(rs.getString("User_Name"), rs.getInt("Count")));
 
             }
         } catch (SQLException throwables){

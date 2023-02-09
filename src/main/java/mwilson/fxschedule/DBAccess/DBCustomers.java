@@ -13,9 +13,10 @@ public class DBCustomers {
         ObservableList<Customer> clist = FXCollections.observableArrayList();
 
         try {
-            String sql = "SELECT c.Customer_ID, c.Customer_Name, c.Address, c.Postal_Code, c.phone, d.division, r.Country FROM customers c\n" +
-                    "JOIN first_level_divisions d on c.Division_ID = d.Division_ID\n" +
-                    "JOIN countries r on d.Country_ID = r.Country_ID;";
+            String sql = """
+                    SELECT c.Customer_ID, c.Customer_Name, c.Address, c.Postal_Code, c.phone, d.division, r.Country FROM customers c
+                    JOIN first_level_divisions d on c.Division_ID = d.Division_ID
+                    JOIN countries r on d.Country_ID = r.Country_ID;""";
 
             PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
 
@@ -40,7 +41,7 @@ public class DBCustomers {
         return clist;
     }
 
-    public static int insert(String name, String address, String postalCode, String phone, int divisionID) throws SQLException {
+    public static void insert(String name, String address, String postalCode, String phone, int divisionID) throws SQLException {
         String sql = "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, Division_ID) VALUES(?, ?, ?, ?, ?)";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
         ps.setString(1, name);
@@ -48,12 +49,18 @@ public class DBCustomers {
         ps.setString(3, postalCode);
         ps.setString(4, phone);
         ps.setInt(5, divisionID);
-        return ps.executeUpdate();
+        ps.executeUpdate();
     }
 
-    public static int update(int customerID, String name, String address, String postalCode, String phone, int divisionID) throws SQLException {
-        String sql = "UPDATE customers \nSET Customer_Name = ?, \nAddress = ?, \nPostal_Code = ?, \nPhone = ?, \nDivision_ID = ? " +
-                "\nWHERE Customer_ID = ?";
+    public static void update(int customerID, String name, String address, String postalCode, String phone, int divisionID) throws SQLException {
+        String sql = """
+                UPDATE customers\s
+                SET Customer_Name = ?,\s
+                Address = ?,\s
+                Postal_Code = ?,\s
+                Phone = ?,\s
+                Division_ID = ?\s
+                WHERE Customer_ID = ?""";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
         ps.setString(1, name);
         ps.setString(2, address);
@@ -61,10 +68,10 @@ public class DBCustomers {
         ps.setString(4, phone);
         ps.setInt(5, divisionID);
         ps.setInt(6, customerID);
-        return ps.executeUpdate();
+        ps.executeUpdate();
     }
 
-    public static int delete(int customerID) throws SQLException {
+    public static void delete(int customerID) throws SQLException {
         String sql = "DELETE FROM appointments WHERE Customer_ID = ?";
         PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
         ps.setInt(1, customerID);
@@ -74,6 +81,6 @@ public class DBCustomers {
         ps = DBConnection.getConnection().prepareStatement(sql);
         ps.setInt(1, customerID);
 
-        return ps.executeUpdate();
+        ps.executeUpdate();
     }
 }

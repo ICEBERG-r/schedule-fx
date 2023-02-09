@@ -25,7 +25,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.*;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class AppViewController implements Initializable {
@@ -94,89 +93,97 @@ public class AppViewController implements Initializable {
         endTimeBox.setValue(selectedAppointment.getEnd().toLocalTime());
         datePicker.setValue(selectedAppointment.getStart().toLocalDate());
     }
-    public void OnCancelButtonClicked(ActionEvent actionEvent) throws IOException {
+    public void OnCancelButtonClicked(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Cancel");
         alert.setHeaderText("Are you sure you want to cancel?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get().equals(ButtonType.OK)) {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
-            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setTitle("Directory");
-            stage.setScene(scene);
-            stage.show();
-        }
+        alert.showAndWait().ifPresent(( response -> {
+            if (response == ButtonType.OK){
+                try {
+                    Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
+                    Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+                    Scene scene = new Scene(root);
+                    stage.setTitle("Directory");
+                    stage.setScene(scene);
+                    stage.show();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }));
     }
 
-    public void OnSaveButtonClicked(ActionEvent actionEvent) throws IOException, SQLException {
+    public void OnSaveButtonClicked(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Save");
         alert.setHeaderText("Are you sure you want to save?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get().equals(ButtonType.OK)){
-            try {
-                LocalDateTime start = LocalDateTime.of(datePicker.getValue(), startTimeBox.getValue());
-                LocalDateTime end = LocalDateTime.of(datePicker.getValue(), endTimeBox.getValue());
-                Instant instantStart = Timestamp.valueOf(start).toInstant();
-                Instant instantEnd = Timestamp.valueOf(end).toInstant();
-                ZoneId zoneId = ZoneId.of(ZoneId.systemDefault().toString());
-                ZonedDateTime startZDT = ZonedDateTime.ofInstant(instantStart, zoneId);
-                ZonedDateTime endZDT = ZonedDateTime.ofInstant(instantEnd, zoneId);
-                ZonedDateTime startEST = startZDT.withZoneSameInstant(ZoneId.of("America/New_York"));
-                ZonedDateTime endEST = endZDT.withZoneSameInstant(ZoneId.of("America/New_York"));
+        alert.showAndWait().ifPresent(( response -> {
+            if (response == ButtonType.OK){
+                try {
+                    LocalDateTime start = LocalDateTime.of(datePicker.getValue(), startTimeBox.getValue());
+                    LocalDateTime end = LocalDateTime.of(datePicker.getValue(), endTimeBox.getValue());
+                    Instant instantStart = Timestamp.valueOf(start).toInstant();
+                    Instant instantEnd = Timestamp.valueOf(end).toInstant();
+                    ZoneId zoneId = ZoneId.of(ZoneId.systemDefault().toString());
+                    ZonedDateTime startZDT = ZonedDateTime.ofInstant(instantStart, zoneId);
+                    ZonedDateTime endZDT = ZonedDateTime.ofInstant(instantEnd, zoneId);
+                    ZonedDateTime startEST = startZDT.withZoneSameInstant(ZoneId.of("America/New_York"));
+                    ZonedDateTime endEST = endZDT.withZoneSameInstant(ZoneId.of("America/New_York"));
 
-                ObservableList<Appointment> customerAppointments = FXCollections.observableArrayList();
+                    ObservableList<Appointment> customerAppointments = FXCollections.observableArrayList();
 
-                DBAppointments.getAllAppointments().forEach(appointment -> {
-                    if (Objects.equals(appointment.getCustomerID(), customerBox.getValue().getCustomerID()) &&
-                    !Objects.equals(appointment.getAppointmentID(), selectedAppointment.getAppointmentID())) {
-                        customerAppointments.add(appointment);
+                    DBAppointments.getAllAppointments().forEach(appointment -> {
+                        if (Objects.equals(appointment.getCustomerID(), customerBox.getValue().getCustomerID()) &&
+                                !Objects.equals(appointment.getAppointmentID(), selectedAppointment.getAppointmentID())) {
+                            customerAppointments.add(appointment);
+                        }
+                    });
+
+                    overlappingAppointments = 0;
+                    customerAppointments.forEach(appointment -> {
+                        if ((start.isAfter(appointment.getStart()) && start.isBefore(appointment.getEnd())) ||
+                                (end.isAfter(appointment.getStart()) && end.isBefore(appointment.getEnd()))) {
+                            overlappingAppointments = overlappingAppointments + 1;
+                        }
+                    });
+
+                    if (typeField.getText().isEmpty() || descriptionArea.getText().isEmpty() || locationField.getText().isEmpty()
+                            || typeField.getText().isEmpty() || customerBox.getValue() == null || userBox.getValue() == null ||
+                            contactBox.getValue() == null){
+                        Helper.DisplayInfoAlert("Error!", "All fields must be filled");
+                    } else if ((Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SATURDAY)) ||
+                            (Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SUNDAY))){
+                        Helper.DisplayInfoAlert("Error!", "Appointments can only be " +
+                                "scheduled on Monday through Friday.");
                     }
-                });
-
-                overlappingAppointments = 0;
-                customerAppointments.forEach(appointment -> {
-                    if ((start.isAfter(appointment.getStart()) && start.isBefore(appointment.getEnd())) ||
-                            (end.isAfter(appointment.getStart()) && end.isBefore(appointment.getEnd()))) {
-                        overlappingAppointments = overlappingAppointments + 1;
+                    else if (startEST.toLocalTime().isBefore(LocalTime.of(8,0)) ||
+                            endEST.toLocalTime().isAfter(LocalTime.of(22,0))){
+                        Helper.DisplayInfoAlert("Error!", "Appointments must occur during business hours - " +
+                                "8:00 - 22:00 EST");
+                    } else if (start.isAfter(end)){
+                        Helper.DisplayInfoAlert("Error!", "Meeting must start before it can end.");
+                    } else if (overlappingAppointments > 0) {
+                        Helper.DisplayInfoAlert("Error!", "Customer has another meeting at this time.");
+                    } else {
+                        DBAppointments.update(selectedAppointment.getAppointmentID(), titleField.getText(),
+                                descriptionArea.getText(), locationField.getText(), typeField.getText(), start, end,
+                                customerBox.getValue().getCustomerID(), userBox.getValue().getUserID(), contactBox.getValue().getContactID());
+                        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
+                        Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
+                        Scene scene = new Scene(root);
+                        stage.setTitle("Directory");
+                        stage.setScene(scene);
+                        stage.show();
                     }
-                });
-
-                if (typeField.getText().isEmpty() || descriptionArea.getText().isEmpty() || locationField.getText().isEmpty()
-                        || typeField.getText().isEmpty() || customerBox.getValue() == null || userBox.getValue() == null ||
-                        contactBox.getValue() == null){
+                } catch (SQLException e){
+                    Helper.DisplayInfoAlert("Error!", "SQL error!");
+                } catch (Exception e){
                     Helper.DisplayInfoAlert("Error!", "All fields must be filled");
-            } else if ((Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SATURDAY)) ||
-                    (Objects.equals(startEST.getDayOfWeek(), DayOfWeek.SUNDAY))){
-                Helper.DisplayInfoAlert("Error!", "Appointments can only be " +
-                        "scheduled on Monday through Friday.");
+                }
             }
-            else if (startEST.toLocalTime().isBefore(LocalTime.of(8,0)) ||
-                    endEST.toLocalTime().isAfter(LocalTime.of(22,0))){
-                Helper.DisplayInfoAlert("Error!", "Appointments must occur during business hours - " +
-                        "8:00 - 22:00 EST");
-            } else if (start.isAfter(end)){
-                Helper.DisplayInfoAlert("Error!", "Meeting must start before it can end.");
-            } else if (overlappingAppointments > 0) {
-                Helper.DisplayInfoAlert("Error!", "Customer has another meeting at this time.");
-            } else {
-                DBAppointments.update(selectedAppointment.getAppointmentID(), titleField.getText(),
-                        descriptionArea.getText(), locationField.getText(), typeField.getText(), start, end,
-                        customerBox.getValue().getCustomerID(), userBox.getValue().getUserID(), contactBox.getValue().getContactID());
-                Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Directory.fxml")));
-                Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
-                Scene scene = new Scene(root);
-                stage.setTitle("Directory");
-                stage.setScene(scene);
-                stage.show();
-            }
-        } catch (SQLException e){
-                Helper.DisplayInfoAlert("Error!", "SQL error!");
-            } catch (Exception e){
-                Helper.DisplayInfoAlert("Error!", "All fields must be filled");
-            }
-    }
+        }
 
+                ));
     }
 }

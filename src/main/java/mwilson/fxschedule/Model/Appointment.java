@@ -50,9 +50,7 @@ public class Appointment {
     public LocalDateTime getEnd(){
         return end;
     }
-    public int getContactID(){
-        return contactID;
-    }
+
     public String getContact(){
         return contact;
     }

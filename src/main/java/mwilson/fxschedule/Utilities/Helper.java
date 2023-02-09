@@ -3,8 +3,6 @@ package mwilson.fxschedule.Utilities;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
-import java.util.Optional;
-
 public class Helper {
 
     public static void DisplayInfoAlert(String title, String elaboration){
@@ -19,20 +17,23 @@ public class Helper {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit");
         alert.setHeaderText("Are you sure you want to exit?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get().equals(ButtonType.OK)){
-            System.exit(0);
-        }
+        alert.showAndWait().ifPresent(( response -> {
+            if (response == ButtonType.OK) {
+                System.exit(0);
+            }
+        }));
+
     }
 
     public static void ExitProgramPromptFrench(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Quitter");
         alert.setHeaderText("Êtes-vous sûr de vouloir quitter?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get().equals(ButtonType.OK)){
-            System.exit(0);
-        }
+        alert.showAndWait().ifPresent(( response -> {
+            if (response == ButtonType.OK) {
+                System.exit(0);
+            }
+        }));
     }
 
 }

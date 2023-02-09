@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mwilson.fxschedule.CustViewController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="mwilson.fxschedule.CustomerViewController">
     <children>
         <Label layoutX="259.0" layoutY="39.0" text="View/Edit Customer" />
         <TextField fx:id="idField" disable="true" layoutX="98.0" layoutY="76.0" />

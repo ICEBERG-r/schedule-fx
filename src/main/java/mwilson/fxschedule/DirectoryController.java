@@ -22,7 +22,6 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class DirectoryController implements Initializable {
@@ -124,7 +123,7 @@ public class DirectoryController implements Initializable {
     }
 
     public void OnViewCustomerButtonClicked(ActionEvent actionEvent) throws IOException {
-        CustViewController.selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
+        CustomerViewController.selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("CustomerView.fxml")));
         Stage stage = (Stage) ((Button)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
@@ -160,47 +159,56 @@ public class DirectoryController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit");
         alert.setHeaderText("Are you sure you want to exit?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get().equals(ButtonType.OK)){
-            System.exit(0);
-        }
+        Helper.ExitProgramPrompt();
     }
 
-    public void OnDeleteCustomerButtonClicked(ActionEvent actionEvent) throws SQLException {
+    public void OnDeleteCustomerButtonClicked(ActionEvent actionEvent) {
         if (!customerTable.getSelectionModel().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Delete Customer");
             alert.setHeaderText("Are you sure you want to delete this customer?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get().equals(ButtonType.OK)) {
-                Customer c = customerTable.getSelectionModel().getSelectedItem();
-                DBCustomers.delete(c.getCustomerID());
-                customerTable.setItems(DBCustomers.getAllCustomers());
-                appointmentTable.setItems(DBAppointments.getAllAppointments());
-                Helper.DisplayInfoAlert("Customer deleted", c.getCustomerName() + " has been deleted.");
-            }
-        } else {
-            Helper.DisplayInfoAlert("No customer selected", "A customer must be selected from the table.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    Customer c = customerTable.getSelectionModel().getSelectedItem();
+                    try {
+                        DBCustomers.delete(c.getCustomerID());
+                        customerTable.setItems(DBCustomers.getAllCustomers());
+                        appointmentTable.setItems(DBAppointments.getAllAppointments());
+                        Helper.DisplayInfoAlert("Customer deleted", c.getCustomerName() + " has been deleted.");
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                } else {
+                    Helper.DisplayInfoAlert("No customer selected", "A customer must be selected from the table.");
+                }
+            }));
         }
     }
 
-    public void OnDeleteAppointmentButtonClicked(ActionEvent actionEvent) throws SQLException {
+    public void OnDeleteAppointmentButtonClicked(ActionEvent actionEvent) {
         if (!appointmentTable.getSelectionModel().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Cancel Appointment");
             alert.setHeaderText("Are you sure you want to cancel this appointment?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get().equals(ButtonType.OK)) {
-                Appointment a = appointmentTable.getSelectionModel().getSelectedItem();
-                DBAppointments.delete(a.getAppointmentID());
-                customerTable.setItems(DBCustomers.getAllCustomers());
-                appointmentTable.setItems(DBAppointments.getAllAppointments());
-                Helper.DisplayInfoAlert("Appointment Cancelled", "Appointment " + a.getAppointmentID()
-                        + " has been cancelled.");
-            }
-        } else {
-            Helper.DisplayInfoAlert("No appointment selected", "An appointment must be selected from the " +
-                    "table.");
+            alert.showAndWait().ifPresent((response -> {
+                if (response == ButtonType.OK) {
+                    Appointment a = appointmentTable.getSelectionModel().getSelectedItem();
+                    try {
+                        DBAppointments.delete(a.getAppointmentID());
+                        customerTable.setItems(DBCustomers.getAllCustomers());
+                        appointmentTable.setItems(DBAppointments.getAllAppointments());
+                        Helper.DisplayInfoAlert("Appointment Cancelled", "Appointment " + a.getAppointmentID()
+                                + " has been cancelled.");
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                } else {
+                    Helper.DisplayInfoAlert("No appointment selected", "An appointment must be selected from the " +
+                            "table.");
+                }
+            }));
         }
     }
 
@@ -219,7 +227,7 @@ public class DirectoryController implements Initializable {
 
     public void OnThisWeekSelected(ActionEvent actionEvent) {
         ObservableList<Appointment> all = DBAppointments.getAllAppointments();
-        ObservableList<Appointment> thisWeek =FXCollections.observableArrayList();
+        ObservableList<Appointment> thisWeek = FXCollections.observableArrayList();
         all.forEach(appointment -> {
             if (appointment.getStart().isAfter(LocalDateTime.now()) &&
                     appointment.getStart().isBefore(LocalDateTime.now().plusWeeks(1))){
