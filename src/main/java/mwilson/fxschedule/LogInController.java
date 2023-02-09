@@ -39,7 +39,7 @@ public class LogInController implements Initializable {
     public static boolean firstLogin;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
-        zoneIDLabel.setText(ZoneId.systemDefault().toString());
+        zoneIDLabel.setText("Zone ID: " + ZoneId.systemDefault());
 
         if (Locale.getDefault().toString().equals("fr_FR")){
             exitButton.setText("Quitter");

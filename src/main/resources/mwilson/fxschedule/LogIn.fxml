@@ -48,13 +48,13 @@
                <font>
                   <Font size="24.0" />
                </font></Label>
-            <TextField fx:id="usernameLoginField" layoutX="214.0" layoutY="188.0" />
-            <PasswordField fx:id="passwordLoginField" layoutX="214.0" layoutY="224.0" />
+            <TextField fx:id="usernameLoginField" layoutX="275.0" layoutY="188.0" />
+            <PasswordField fx:id="passwordLoginField" layoutX="275.0" layoutY="224.0" />
             <Label fx:id="usernameLabel" layoutX="155.0" layoutY="192.0" text="Username" />
             <Label fx:id="passwordLabel" layoutX="155.0" layoutY="228.0" text="Password" />
-            <Button fx:id="loginButton" layoutX="320.0" layoutY="265.0" mnemonicParsing="false" onAction="#OnLoginButtonClicked" text="Log in" />
-            <Button fx:id="exitButton" layoutX="588.0" layoutY="361.0" mnemonicParsing="false" onAction="#OnExitClicked" text="Exit" />
-            <Label fx:id="zoneIDLabel" layoutX="214.0" layoutY="269.0" text="Zone ID" />
+            <Button fx:id="loginButton" layoutX="385.0" layoutY="265.0" mnemonicParsing="false" onAction="#OnLoginButtonClicked" text="Log in" />
+            <Button fx:id="exitButton" layoutX="700.0" layoutY="552.0" mnemonicParsing="false" onAction="#OnExitClicked" text="Exit" />
+            <Label fx:id="zoneIDLabel" layoutX="155.0" layoutY="269.0" text="Zone ID" />
       </children>
     </AnchorPane>
   </children>

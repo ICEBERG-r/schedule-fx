@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import mwilson.fxschedule.Database.DBConnection;
 
 import java.io.IOException;
+import java.util.Locale;
 
 public class Main extends Application {
     @Override
