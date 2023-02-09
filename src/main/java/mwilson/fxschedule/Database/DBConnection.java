@@ -12,8 +12,8 @@ public class DBConnection {
     private static final String databaseName = "client_schedule";
     private static final String jdbcUrl = protocol + vendor + location + databaseName + "?connectionTimeZone = SERVER";
     private static final String driver = "com.mysql.cj.jdbc.Driver";
-    private static final String userName = "root";
-    private static final String password = "sqlsqlsql";
+    private static final String userName = "sqlUser";
+    private static final String password = "Passw0rd!";
     private static Connection connection = null;
 
 
