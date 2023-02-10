@@ -17,7 +17,6 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
     }
-
     /**
      * The entrance point of the application.
      * Starts the connection with the MySQL database and launches the application.
