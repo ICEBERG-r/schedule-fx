@@ -67,7 +67,7 @@ public class AppointmentCreateController implements Initializable {
     /**
      * When the cancel button is clicked, an alert appears to confirm cancellation of the appointment creation.
      * If the user selects OK, the program navigates back to the Directory scene.
-     * LAMBDA COMMENTS
+     * LAMBDA - This Event handler lambda slightly reduces the amount of code needed to execute the event.
      */
     public void OnCancelButtonClicked(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -94,6 +94,8 @@ public class AppointmentCreateController implements Initializable {
      * When the save button is clicked, an alert appears to confirm saving the appointment.
      * If OK is clicked, the appointment is added to the database and the program navigates back to the
      * Directory scene.
+     * LAMBDA - This Event handler lambda slightly reduces the amount of code needed to execute the event.
+     * LAMBDA - The "For Each" lambda reduces the lines of code necessary to execute the loop.
      */
     public void OnSaveButtonClicked(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

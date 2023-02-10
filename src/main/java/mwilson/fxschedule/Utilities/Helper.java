@@ -23,6 +23,7 @@ public class Helper {
     /**
      * Displays an alert window confirming that the user wishes to exit the program.
      * Terminates the program when OK is clicked.
+     * LAMBDA - This Event handler lambda slightly reduces the amount of code needed to execute the event.
      */
     public static void ExitProgramPrompt(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -39,6 +40,7 @@ public class Helper {
     /**
      * Displays an alert window in French confirming that the user wishes to exit the program.
      * Terminates the program when OK is clicked.
+     * LAMBDA - This Event handler lambda slightly reduces the amount of code needed to execute the event.
      */
     public static void ExitProgramPromptFrench(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

@@ -210,7 +210,8 @@ public class DirectoryController implements Initializable {
     }
 
     /**
-     * Displays all appointments within the next week when the This Week radio button is selected
+     * Displays all appointments within the next week when the "This Week" radio button is selected
+     * LAMBDA - The "For Each" lambda reduces the lines of code necessary to execute the loop.
      */
     public void OnThisWeekSelected(ActionEvent actionEvent) {
         ObservableList<Appointment> all = DBAppointments.getAllAppointments();
@@ -227,6 +228,7 @@ public class DirectoryController implements Initializable {
 
     /**
      * Displays all appointments within the next month when the This Month radio button is selected
+     * LAMBDA - The "For Each" lambda reduces the lines of code necessary to execute the loop.
      */
     public void OnThisMonthSelected(ActionEvent actionEvent) {
         ObservableList<Appointment> all = DBAppointments.getAllAppointments();
@@ -244,6 +246,7 @@ public class DirectoryController implements Initializable {
 
     /**
      * Gets the user ID from the username used to log in to the program.
+     * LAMBDA - The "For Each" lambda reduces the lines of code necessary to execute the loop.
      */
     void setUserID(){
         DBUsers.getAllUsers().forEach(user -> {
@@ -257,7 +260,7 @@ public class DirectoryController implements Initializable {
      * Uses the User ID to check for appointments within the next fifteen minutes.
      * Uses the value of a boolean flag to ensure that this only runs once, after the initial login.
      * Sets the firstLogin to false after checking for appointments.
-     * LAMBDA COMMENTS
+     * LAMBDA - The "For Each" lambda reduces the lines of code necessary to execute the loop.
      */
     void checkForAppointmentsWithinFifteenMinutes(){
         if (LogInController.firstLogin) {
