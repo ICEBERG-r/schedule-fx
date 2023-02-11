@@ -1,6 +1,5 @@
 package mwilson.fxschedule;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -43,7 +42,7 @@ public class AppointmentViewController implements Initializable {
     public ComboBox<LocalTime> endTimeBox;
     public ComboBox<Customer> customerBox;
     public ComboBox<User> userBox;
-    public int overlappingAppointments;
+    public boolean isOverlapping;
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
         contactBox.setItems(DBContacts.getAllContacts());
@@ -146,22 +145,18 @@ public class AppointmentViewController implements Initializable {
                     ZonedDateTime startEST = startZDT.withZoneSameInstant(ZoneId.of("America/New_York"));
                     ZonedDateTime endEST = endZDT.withZoneSameInstant(ZoneId.of("America/New_York"));
 
-                    ObservableList<Appointment> customerAppointments = FXCollections.observableArrayList();
-
-                    DBAppointments.getAllAppointments().forEach(appointment -> {
-                        if (Objects.equals(appointment.getCustomerID(), customerBox.getValue().getCustomerID()) &&
-                                !Objects.equals(appointment.getAppointmentID(), selectedAppointment.getAppointmentID())) {
-                            customerAppointments.add(appointment);
-                        }
-                    });
-
-                    overlappingAppointments = 0;
-                    customerAppointments.forEach(appointment -> {
-                        if ((start.isAfter(appointment.getStart()) && start.isBefore(appointment.getEnd())) ||
-                                (end.isAfter(appointment.getStart()) && end.isBefore(appointment.getEnd()))) {
-                            overlappingAppointments = overlappingAppointments + 1;
-                        }
-                    });
+                    isOverlapping = false;
+                    ObservableList<Appointment> appointments = DBAppointments.getAllAppointments();
+                    appointments.forEach(appointment -> {
+                        if (Objects.equals(customerBox.getValue().getCustomerID(), appointment.getCustomerID())){
+                            if ((start.isAfter(appointment.getStart()) && start.isBefore(appointment.getEnd())) ||
+                                (end.isAfter(appointment.getStart()) && end.isBefore(appointment.getEnd())) ||
+                                (start.isAfter(appointment.getStart())) && end.isBefore(appointment.getEnd()) ||
+                                    (start.isBefore(appointment.getStart()) && end.isAfter(appointment.getEnd())) ||
+                                (start.equals(appointment.getStart())) || (end.equals(appointment.getEnd()))) {
+                                    isOverlapping = true;
+                                }
+                    }});
 
                     if (typeField.getText().isEmpty() || descriptionArea.getText().isEmpty() || locationField.getText().isEmpty()
                             || typeField.getText().isEmpty() || customerBox.getValue() == null || userBox.getValue() == null ||
@@ -178,7 +173,7 @@ public class AppointmentViewController implements Initializable {
                                 "8:00 - 22:00 EST");
                     } else if (start.isAfter(end)){
                         Helper.DisplayInfoAlert("Error!", "Meeting must start before it can end.");
-                    } else if (overlappingAppointments > 0) {
+                    } else if (isOverlapping) {
                         Helper.DisplayInfoAlert("Error!", "Customer has another meeting at this time.");
                     } else {
                         DBAppointments.update(selectedAppointment.getAppointmentID(), titleField.getText(),
