@@ -1,5 +1,5 @@
 Schedule FX 3000
-Created by Mark Wilson - mwi3093@wgu.edu
+Created by Mark Wilson
 ver 1.0 - 02/08/23
 
 IDE: IntelliJ Community 2022.2
